@@ -1,0 +1,2357 @@
+#include "TgComm.jce"
+
+module ETG
+{
+
+    ///////////////////////////////////// 直播相关的结构 /////////////////////////////////
+
+	struct GetLiveBasicInfoReq
+	{
+		0 optional  BasicInfo       basicInfo;    // 基本信息
+		1 optional	int		        id;		      // 直播室id
+	};
+
+	struct GetLiveBasicInfoRsp
+	{
+        0 optional	RET_CODE			iRet;		       // 返回码
+        1 optional	string			    message;	       // 返回信息
+        2 optional	LiveBasicInfo	    liveBasicInfo;	   // 直播室基本信息
+	};
+
+	struct GetLatestStageBatchByUidReq
+	{
+		0 optional  BasicInfo       basicInfo;    // 基本信息
+		1 optional	vector<int>		userIds;      // 投顾id列表
+	};
+
+	struct GetLatestStageBatchByUidRsp
+	{
+        0 optional	RET_CODE			        iRet;		       // 返回码
+        1 optional	string			            message;	       // 返回信息
+        2 optional	vector<StageLiveBasicInfo>	list;	           // 直播室基本信息列表
+	};
+
+    struct GetStageLiveListByUidReq
+    {
+        0 optional  BasicInfo       basicInfo;    // 基本信息
+        1 optional	int             userId;       // 投顾id
+        2 optional	int             offset;       // 偏移
+        3 optional	int             size;         // 数量
+        4 optional  int             flag;         // 顺序标识，1：从新到旧；2：从旧到新，默认为1
+    };
+
+    struct StageLiveListByUidRsp
+    {
+        0 optional	int                         total;		       // 总数
+        1 optional	vector<StageLiveBasicInfo>	list;	           // 分期直播室基本信息列表
+    };
+
+    struct GetStageLiveListByUidRsp
+    {
+        0 optional	RET_CODE			        iRet;		       // 返回码
+        1 optional	string			            message;	       // 返回信息
+        2 optional	StageLiveListByUidRsp   	data;	           // 分期直播室基本信息列表
+    };
+
+    struct CreateLiveReq
+    {
+        0 optional  BasicInfo       basicInfo;    // 基本信息
+    };
+
+    struct CreateLiveRsp
+    {
+        0 optional	RET_CODE			iRet;		       // 返回码
+        1 optional	string			    message;	       // 返回信息
+    };
+
+    struct CreateLiveByStageSubmitReq
+    {
+        0 optional  BasicInfo           basicInfo;            // 基本请求信息
+        1 optional  StageLiveBasicInfo  stageLiveBasicInfo;   // 分期直播信息
+    };
+
+    struct CreateLiveByStageSubmitRsp
+    {
+        0 optional	RET_CODE			iRet;		       // 返回码
+        1 optional	string			    message;	       // 返回信息
+        2 optional  StageLiveBasicInfo  data;              // 分期直播基本信息
+    };
+
+    struct PushStageMessageReq
+    {
+        0 optional  BasicInfo           basicInfo;            // 基本请求信息
+        1 optional  LiveMsg             liveMsg;              // 直播消息
+    };
+
+    struct PushStageMessageRsp
+    {
+        0 optional	RET_CODE			iRet;		       // 返回码
+        1 optional	string			    message;	       // 返回信息
+    };
+
+    struct GetHottestStageListReq
+    {
+        0 optional  BasicInfo           basicInfo;    // 基本信息
+        1 optional  int                 offset;       // 偏移
+        2 optional  int                 size;         // 大小
+    };
+
+    struct GetHottestStageListRsp
+    {
+        0 optional	RET_CODE			iRet;		       // 返回码
+        1 optional	string			    message;	       // 返回信息
+        2 optional  StageLive           stageLive;         // 分期直播数据
+    };
+
+    struct ViewStageLiveReq
+    {
+        0 optional  BasicInfo           basicInfo;        // 基本信息
+        1 optional  int                 userId;           // 投顾的用户id
+        2 optional  int                 liveId;           // 直播室id
+        3 optional  int                 stageLiveId;      // 分期直播id
+    };
+
+    struct ViewStageLiveRsp
+    {
+        0 optional	RET_CODE			iRet;		       // 返回码
+        1 optional	string			    message;	       // 返回信息
+        2 optional  StageLiveDetail     detail;            // 分期直播详情
+        3 optional  int                 favoriteStatus;    // 点赞状态 0：未点赞；1：点赞
+        4 optional  int                 isLatestStage;     // 是否是最新的分期直播 0：否；1：是
+    };
+
+    struct JoinStageLiveReq
+    {
+        0 optional  BasicInfo           basicInfo;        // 基本信息
+        1 optional  int                 liveId;           // 直播室id
+        2 optional  int                 stageLiveId;      // 分期直播id
+    };
+
+    struct JoinStageLiveRsp
+    {
+        0 optional	RET_CODE			iRet;		       // 返回码
+        1 optional	string			    message;	       // 返回信息
+    };
+
+    struct FavoriteStageLiveReq
+    {
+        0 optional  BasicInfo           basicInfo;        // 基本信息
+        1 optional  int                 stageLiveId;      // 分期直播id
+    };
+
+    struct FavoriteStageLiveRsp
+    {
+        0 optional	RET_CODE			iRet;		       // 返回码
+        1 optional	string			    message;	       // 返回信息
+    };
+
+    struct FeaturedStageLiveListReq
+    {
+        0 optional  BasicInfo           basicInfo;    // 基本信息
+        1 optional  int                 offset;       // 偏移
+        2 optional  int                 size;         // 大小
+    };
+
+    struct FeaturedStageLiveListRsp
+    {
+        0 optional	RET_CODE			iRet;		       // 返回码
+        1 optional	string			    message;	       // 返回信息
+        2 optional  StageLive           stageLive;         // 分期直播数据
+    };
+
+    struct PushStageContentReq
+    {
+        0 optional  BasicInfo           basicInfo;        // 基本信息
+        1 optional  LiveContent         liveContent;      // 直播室内容
+    };
+
+    struct PushStageContentRsp
+    {
+        0 optional	RET_CODE			iRet;		       // 返回码
+        1 optional	string			    message;	       // 返回信息
+        2 optional	int			        liveContentId;	   // 返回的直播内容id
+    };
+
+    struct DelLiveContentReq
+    {
+        0 optional  BasicInfo           basicInfo;        // 基本信息
+        1 optional  int                 liveId;           // 直播室id
+        2 optional  int                 stageLiveId;      // 分期直播id
+        3 optional  int                 contentId;        // 内容id
+    };
+
+    struct DelLiveContentRsp
+    {
+        0 optional	RET_CODE			iRet;		       // 返回码
+        1 optional	string			    message;	       // 返回信息
+    };
+
+    struct DeleteJunkDataReq
+    {
+        0 optional  BasicInfo           basicInfo;        // 基本信息
+        1 optional  int                 liveId;           // 直播室id
+        2 optional  int                 stageLiveId;      // 分期直播id
+        3 optional  int                 messageId;        // 互动消息id
+    };
+
+    struct DeleteJunkDataRsp
+    {
+        0 optional	RET_CODE			iRet;		       // 返回码
+        1 optional	string			    message;	       // 返回信息
+    };
+
+    struct PullLiveStageMessageReq
+    {
+        0 optional  BasicInfo           basicInfo;        // 基本信息
+        1 optional  int                 tgId;             // 投顾的用户id
+        2 optional  int                 liveId;           // 直播室id
+        3 optional  int                 stageLiveId;      // 分期直播id
+        4 optional  int                 flag;             // 方向标识 1：向下拉取最新的直播互动消息；2：向上拉取旧的互动消息
+        5 optional  int                 maxMsgId;         // 最大的消息id，当flag为1时配合使用
+        6 optional  int                 minMsgId;         // 最小的消息id，当flag为2时配合使用
+        7 optional  int                 offset;           // 偏移
+        8 optional  int                 size;             // 大小
+        9 optional  int                 isAll = 0;        // 是否获取所有的直播互动（包括删除的互动数据） 1: 获取所有的互动；0：过滤删除过的互动消息
+        10 optional  int                isOnlyOne = 0;    // 是否只查询一个分期直播 1：仅仅一个分期直播；0：最近的分期直播会回溯近7期的直播
+    };
+
+    struct PullLiveStageMessageRsp
+    {
+        0 optional	RET_CODE			iRet;		       // 返回码
+        1 optional	string			    message;	       // 返回信息
+        2 optional  StageLiveMsg        data;              // 直播消息
+    };
+
+    struct PullLiveStageMessageDetailRsp
+    {
+        0 optional	RET_CODE			iRet;		       // 返回码
+        1 optional	string			    message;	       // 返回信息
+        2 optional  StageLiveMsg        data;              // 直播消息
+    };
+
+    struct QueryLiveMsgByConditionReq
+    {
+        0 optional  BasicInfo           basicInfo;        // 基本信息
+        1 optional  int                 offset;           // 偏移
+        2 optional  int                 size;             // 大小
+        3 optional  string              condition;        // 条件
+    };
+
+    struct LiveMsgResult
+    {
+        0 optional  int            id;             // 消息id
+        1 optional  int            replyId;        // 回复消息id
+        2 optional  int            liveId;         // 直播室id
+        3 optional  int            stageLiveId;    // 分期直播室id
+        4 optional  string         content;        // 直播内容
+        5 optional  int            userId;         // 用户id
+        6 optional  string         name;           // 用户名
+        7 optional  string         nickName;       // 用户昵称
+        8 optional  string         title;          // 直播室标题
+        9 optional  string         summary;        // 直播室简介
+        10 optional string         updateTime;     // 互动发布时间
+        11 optional GagInfo        gagInfo;        // 禁言信息
+        12 optional int            isDelete;       // 是否删除 0：未删除；1：删除
+    };
+
+    struct QueryLiveMsg
+    {
+        0 optional	int			                    total;		       // 总数
+        1 optional	vector<LiveMsgResult>			list;	           // 数据列表
+    };
+
+    struct QueryLiveMsgByConditionRsp
+    {
+        0 optional	RET_CODE			iRet;		       // 返回码
+        1 optional	string			    message;	       // 返回信息
+        2 optional  QueryLiveMsg        data;              // 直播消息
+    };
+
+    struct PullMsgReq
+    {
+        0 optional  BasicInfo           basicInfo;        // 基本信息
+        1 optional  int                 offset;           // 偏移
+        2 optional  int                 size;             // 大小
+    };
+
+    struct PullMsgInfo
+    {
+        0 optional	LiveMsg			    liveMsg;		       // 总数
+        1 optional	int	                isRecommend;	       // 是否推荐
+        2 optional  string              recommendTime;         // 推荐时间
+    };
+
+    struct PullMsgWrap
+    {
+        0 optional	int			            total;		       // 总数
+        1 optional	vector<PullMsgInfo>	    list;	           // 消息列表
+    };
+
+    struct PullMsgRsp
+    {
+        0 optional	RET_CODE			iRet;		       // 返回码
+        1 optional	string			    message;	       // 返回信息
+        2 optional  PullMsgWrap         data;              // 消息列表
+    };
+
+    struct PullStageLiveContentReq
+    {
+        0 optional  BasicInfo           basicInfo;        // 基本信息
+        1 optional  int                 tgId;             // 投顾的用户id
+        2 optional  int                 liveId;           // 直播室id
+        3 optional  int                 stageLiveId;      // 分期直播id
+        4 optional  int                 flag;             // 方向标识 1：向下拉取最新的直播内容；2：向上拉取旧的直播内容
+        5 optional  int                 maxId;            // 最大的消息id，当flag为1时配合使用
+        6 optional  int                 minId;            // 最小的消息id，当flag为2时配合使用
+        7 optional  int                 offset;           // 偏移
+        8 optional  int                 size;             // 大小
+    };
+
+    struct PullStageLiveContentRsp
+    {
+        0 optional	RET_CODE			iRet;		       // 返回码
+        1 optional	string			    message;	       // 返回信息
+        2 optional  StageLiveContent    data;              // 直播内容
+    };
+
+    struct QueryRecommendLivesReq
+    {
+        0 optional  BasicInfo           basicInfo;        // 基本信息
+    };
+
+    struct QueryRecommendLivesRsp
+    {
+        0 optional	RET_CODE			        iRet;		       // 返回码
+        1 optional	string			            message;	       // 返回信息
+        2 optional	vector<StageLiveDetail>	    stageLives;	       // 分期直播
+    };
+
+    struct QueryHotLivesReq
+    {
+        0 optional  BasicInfo           basicInfo;        // 基本信息
+    };
+
+    struct QueryHotLivesRsp
+    {
+        0 optional	RET_CODE			        iRet;		       // 返回码
+        1 optional	string			            message;	       // 返回信息
+        2 optional	vector<StageLiveDetail>	    stageLives;	       // 分期直播
+    };
+
+    struct SetFavoriteLiveReq
+    {
+        0 optional  BasicInfo           basicInfo;        // 基本信息
+        1 optional  int                 liveId;           // 直播室id
+        2 optional  int                 status;           // 状态 0：取消，1：设置
+        3 optional  int                 weight;           // 排序权重
+    };
+
+    struct SetFavoriteLiveRsp
+    {
+        0 optional	RET_CODE			        iRet;		       // 返回码
+        1 optional	string			            message;	       // 返回信息
+    };
+
+    struct SetHotLiveReq
+    {
+        0 optional  BasicInfo           basicInfo;        // 基本信息
+        1 optional  int                 liveId;           // 直播室id
+        2 optional  int                 status;           // 状态 0：取消，1：设置
+        3 optional  int                 weight;           // 排序权重
+    };
+
+    struct SetHotLiveRsp
+    {
+        0 optional	RET_CODE			        iRet;		       // 返回码
+        1 optional	string			            message;	       // 返回信息
+    };
+
+    struct SetTopForBannerReq
+    {
+        0 optional  BasicInfo           basicInfo;        // 基本信息
+        1 optional  int                 liveId;           // 直播室id
+        2 optional  int                 status;           // 状态 0：取消，1：设置
+        3 optional  int                 weight;           // 排序权重
+    };
+
+    struct SetTopForBannerRsp
+    {
+        0 optional	RET_CODE			        iRet;		       // 返回码
+        1 optional	string			            message;	       // 返回信息
+    };
+
+    struct SetTopForAppReq
+    {
+        0 optional  BasicInfo           basicInfo;        // 基本信息
+        1 optional  int                 liveId;           // 直播室id
+        2 optional  int                 status;           // 状态 0：取消，1：设置
+        3 optional  int                 weight;           // 排序权重
+    };
+
+    struct SetTopForAppRsp
+    {
+        0 optional	RET_CODE			        iRet;		       // 返回码
+        1 optional	string			            message;	       // 返回信息
+    };
+
+    struct SetHotTopForAppReq
+    {
+        0 optional  BasicInfo           basicInfo;        // 基本信息
+        1 optional  int                 liveId;           // 直播室id
+        2 optional  int                 status;           // 状态 0：取消，1：设置
+        3 optional  int                 weight;           // 排序权重
+    };
+
+    struct SetHotTopForAppRsp
+    {
+        0 optional	RET_CODE			        iRet;		       // 返回码
+        1 optional	string			            message;	       // 返回信息
+    };
+
+    struct SetHotLiveMessageReq
+    {
+        0 optional  BasicInfo           basicInfo;        // 基本信息
+        1 optional  int                 id;               // 消息id
+        2 optional  int                 status;           // 状态 0：取消，1：设置
+        3 optional  int                 weight;           // 排序权重
+    };
+
+    struct SetHotLiveMessageRsp
+    {
+        0 optional	RET_CODE			        iRet;		       // 返回码
+        1 optional	string			            message;	       // 返回信息
+    };
+
+    struct QueryRecommendMessagesReq
+    {
+        0 optional  BasicInfo           basicInfo;        // 基本信息
+    };
+
+    struct QueryRecommendMessagesRsp
+    {
+        0 optional	RET_CODE			        iRet;		       // 返回码
+        1 optional	string			            message;	       // 返回信息
+        2 optional  vector<RecommendMsg>        list;              // 互动数据
+    };
+
+    struct EditLiveReq
+    {
+        0 optional  BasicInfo           basicInfo;        // 基本信息
+        1 optional  int                 liveId;           // 直播室id
+        2 optional  int                 stageLiveId;      // 分期直播id
+        3 optional  int                 peopleNum;        // 参与人数
+    };
+
+    struct EditLiveRsp
+    {
+        0 optional	RET_CODE			        iRet;		       // 返回码
+        1 optional	string			            message;	       // 返回信息
+    };
+
+    struct SwitchLiveStatusReq
+    {
+        0 optional  BasicInfo           basicInfo;        // 基本信息
+        1 optional  int                 liveId;           // 直播室id
+        2 optional  int                 status;           // 状态 1：开启；0：关闭
+        3 optional  string              startT;           // 开始时间，时间格式例如：2017-01-03 12:11:09
+        4 optional  string              endT;             // 结束时间，时间格式例如：2017-11-03 12:11:09
+    };
+
+    struct SwitchLiveStatusRsp
+    {
+        0 optional	RET_CODE			        iRet;		       // 返回码
+        1 optional	string			            message;	       // 返回信息
+    };
+
+    struct QueryLatestLivesReq
+    {
+        0 optional  BasicInfo           basicInfo;    // 基本信息
+        1 optional  int                 offset;       // 偏移
+        2 optional  int                 size;         // 大小
+    };
+
+    struct QueryLatestLivesRsp
+    {
+        0 optional	RET_CODE			iRet;		       // 返回码
+        1 optional	string			    message;	       // 返回信息
+        2 optional  StageLive           stageLive;         // 分期直播数据
+    };
+
+    struct QueryTypesReq
+    {
+        0 optional  BasicInfo           basicInfo;    // 基本信息
+    };
+
+    struct QueryTypesRsp
+    {
+        0 optional	RET_CODE			             iRet;		       // 返回码
+        1 optional	string			                 message;	       // 返回信息
+        2 optional  vector<LiveDictionary>           list;             // 类型数据
+    };
+
+    struct QueryByStageLiveTypeReq
+    {
+        0 optional  BasicInfo           basicInfo;    // 基本信息
+        1 optional  int                 offset;       // 偏移
+        2 optional  int                 size;         // 大小
+        3 optional  int                 type;         // 类型 1：观点多；2：互动热；3：多点赞
+    };
+
+    struct QueryByStageLiveTypeRsp
+    {
+        0 optional	RET_CODE			iRet;		       // 返回码
+        1 optional	string			    message;	       // 返回信息
+        2 optional  StageLive           stageLive;         // 分期直播数据
+    };
+
+    struct StageLiveNoticeReq
+    {
+        0 optional  BasicInfo           basicInfo;    // 基本信息
+        1 optional  int                 liveId;       // 直播室id
+        2 optional  int                 stageLiveId;  // 分期直播id
+        3 optional  int                 maxId;        // 最大的直播内容id
+    };
+
+    struct StageLiveNoticeRsp
+    {
+        0 optional	RET_CODE			iRet;		       // 返回码
+        1 optional	string			    message;	       // 返回信息
+        2 optional  StageLiveNotice     data;              // 最新消息内容
+    };
+
+    struct GetLiveStageRedDotReq
+    {
+        0 optional  BasicInfo           basicInfo;    // 基本信息
+        1 optional  int                 liveId;       // 直播室id
+    };
+
+
+    struct GetLiveStageRedDotRsp
+    {
+        0 optional	RET_CODE			iRet;		       // 返回码
+        1 optional	string			    message;	       // 返回信息
+        2 optional  int                 count;             // 是否有新的直播内容 1：有，0：没有
+    };
+
+    struct OpenUserLiveReq
+    {
+        0 optional  BasicInfo       basicInfo;    // 基本信息
+        1 optional  int             tgUserId;     // 投顾的userId
+    };
+
+    struct OpenUserLiveRsp
+    {
+        0 optional	RET_CODE			iRet;		       // 返回码
+        1 optional	string			    message;	       // 返回信息
+    };
+
+    struct SetGagReq
+    {
+        0 optional  BasicInfo       basicInfo;    // 基本信息
+        1 optional  int             userId;       // 被禁言的用户id
+        2 optional  int             liveId;       // 直播室id，0：全局设置，否则针对直播室设置
+        3 optional  int             status;       // 状态 1：禁言，0：取消禁言
+    };
+
+    struct SetGagRsp
+    {
+        0 optional	RET_CODE			iRet;		       // 返回码
+        1 optional	string			    message;	       // 返回信息
+    };
+
+    struct GetLiveListReq
+    {
+        0 optional  BasicInfo       basicInfo;       // 基本信息
+        1 optional  int             offset;          // 偏移
+        2 optional  int             size;            // 大小
+        3 optional  int             recommendType;   // 类型 1：web首页-精彩直播；2：web看直播-热门直播；3：APP-直播banner；4：APP-火热直播；5：APP-热门直播；6：全部
+    };
+
+    struct RecommendLiveDetail
+    {
+        0 optional	LiveDetail			  detail;	        // 返回码
+        1 optional	int	                  isRecommend = 0;  // 是否推荐 1：推荐； 0：不推荐
+        2 optional  string                t;                // 推荐时间
+        3 optional  int                   isClose;          // 是否关闭 1：关闭；0：开启
+        4 optional  string                startT;           // 直播室开始关闭的时间
+        5 optional  string                endT;             // 直播室结束关闭的时间
+        6 optional  int                   w;                // 权重
+        7 optional  int                   stageId;          // 最新分期直播室ID
+    };
+
+    struct LiveListRsp
+    {
+        0 optional	int			                  total;	   // 返回码
+        1 optional	vector<RecommendLiveDetail>	  list;	       // 返回信息
+    };
+
+    struct GetLiveListRsp
+    {
+        0 optional	RET_CODE			iRet;		       // 返回码
+        1 optional	string			    message;	       // 返回信息
+        2 optional  LiveListRsp         data;              // 直播数据
+    };
+
+    struct GetStageLiveDetailListReq
+    {
+        0 optional  BasicInfo       basicInfo;       // 基本信息
+        1 optional  int             userId;          // 投顾id
+        2 optional  int             liveId;          // 直播室id
+        3 optional  int             offset;          // 偏移
+        4 optional  int             size;            // 大小
+        5 optional  string          year;            // 年，用于过滤
+        6 optional  string          month;           // 月，用于过滤
+    };
+
+    struct StageLiveDetailListRsp
+    {
+        0 optional int                              total;             // 总数
+        1 optional  vector<StageLiveDetail>         list;              // 分期直播详情列表
+    };
+
+    struct GetStageLiveDetailListRsp
+    {
+        0 optional	RET_CODE			            iRet;		       // 返回码
+        1 optional	string			                message;	       // 返回信息
+        2 optional  StageLiveDetailListRsp          data;              // 分期直播详情列表
+    };
+
+    struct UpdateLiveSubmitReq
+    {
+        0 optional  BasicInfo       basicInfo;       // 基本信息
+        1 optional  int             liveId;          // 直播室id
+        2 optional  string          title;           // 直播室标题
+    };
+
+    struct UpdateLiveSubmitRsp
+    {
+        0 optional	RET_CODE			            iRet;		       // 返回码
+        1 optional	string			                message;	       // 返回信息
+    };
+
+    struct GetLiveBasicInfoByUidReq
+    {
+        0 optional  BasicInfo       basicInfo;       // 基本信息
+        1 optional  int             tgId;            // 投顾id
+    };
+
+    struct GetLiveBasicInfoByUidRsp
+    {
+        0 optional	RET_CODE			            iRet;		       // 返回码
+        1 optional	string			                message;	       // 返回信息
+        2 optional  LiveBasicInfo                   liveBasicInfo;     // 直播室基本信息
+    };
+
+    struct EditStageLiveReq
+    {
+        0 optional  BasicInfo       basicInfo;              // 基本信息
+        1 optional  StageLiveBasicInfo stageLiveBasicInfo;  //分期直播的基本信息
+    };
+
+    struct EditStageLiveRsp
+    {
+        0 optional	RET_CODE			            iRet;		         // 返回码
+        1 optional	string			                message;	         // 返回信息
+    };
+
+    struct GetStageLiveListReq
+    {
+        0 optional  BasicInfo       basicInfo;    // 基本信息
+        1 optional	int             offset;       // 偏移
+        2 optional	int             size;         // 数量
+    };
+
+    struct GetStageLiveListRsp
+    {
+        0 optional	RET_CODE			            iRet;		         // 返回码
+        1 optional	string			                message;	         // 返回信息
+        2 optional  int                             total;               // 总数
+        3 optional  vector<StageLiveDetail>         list;                // 分期直播详情列表
+    };
+
+    struct EditLiveContentReq
+    {
+        0 optional  BasicInfo       basicInfo;    // 基本信息
+        1 optional	int             offset;       // 偏移
+        2 optional  LiveContent     liveContent;  // 直播内容修改信息
+    };
+
+    struct EditLiveContentRsp
+    {
+        0 optional	RET_CODE			            iRet;		         // 返回码
+        1 optional	string			                message;	         // 返回信息
+        2 optional  int                             liveContentId;       // 被修改的直播内容id
+    };
+
+    struct GetLivesByKeyWordReq
+    {
+        0 optional  BasicInfo       basicInfo;    // 基本信息
+        1 optional	string          keyWord;      // 搜索关键字
+        2 optional	int             offset;       // 偏移
+        3 optional	int             size;         // 偏移
+
+    };
+
+    struct GetLivesByKeyWordRsp
+    {
+        0 optional	RET_CODE			            iRet;		         // 返回码
+        1 optional	string			                message;	         // 返回信息
+        2 optional	vector<StageLiveDetail>	        details;	         // 搜索结果
+        3 optional	int	                            records;	         // 总数
+    };
+
+    ///////////////////////////////////// 观点相关的结构 /////////////////////////////////
+    struct GetViewDetailsReq
+    {
+        0 optional	BasicInfo	        userInfo;	// 用户信息
+        1 optional	int			        offset;	    // 偏移量
+        2 optional	int			        size;	    // 数量
+        3 optional	int			        type;	    // 类型查询：0为最新，1宏观，2个股,3热门
+        4 optional	int			        cost;	    // 收费查询：0为全部，1收费，2免费
+    };
+
+    struct GetViewDetailReq
+    {
+        0 optional	BasicInfo	        userInfo;	  // 用户信息
+        1 optional	int			        viewId;	      // 观点id
+        2 optional  int                 isFromDb = 0; // 是否强制从DB中获取
+    };
+
+    struct GetTgViewDetailsReq
+    {
+        0 optional	BasicInfo	        userInfo;	// 用户信息
+        1 optional	int			        offset;	    // 偏移量
+        2 optional	int			        size;	    // 数量
+    };
+
+
+    struct GetViewCommentReq
+    {
+        0 optional	BasicInfo	        userInfo;	  // 用户信息
+        1 optional	int			        viewId;	      // 观点id
+        2 optional  int                 offset = 0;   // 偏移量, 默认为0
+        3 optional  int                 size = 0;     // 长度，如果为-1则获取所有的数据
+        4 optional  int                 isFromDb = 0; // 是否强制从DB中获取, 1：强制从数据库中获取数据
+    };
+
+    struct GetViewCommentRsp
+    {
+        0 optional	RET_CODE		    iRet;		  // 返回码
+        1 optional	string			    message;	  // 错误信息，如果成功，则为空
+        2 optional	ViewComments	    comments;	  // 观点评论
+    };
+
+	struct GetViewDetailsRsp
+	{
+		0 optional	RET_CODE		         iRet;		// 返回码
+		1 optional	string			         message;	// 错误信息，如果成功，则为空
+		2 optional	vector<ViewDetailForYy>	 details;	// 观点详情
+		3 optional	int	                     records;	// 总数
+	};
+
+	struct GetTgViewDetailsRsp
+    {
+        0 optional	RET_CODE		         iRet;		// 返回码
+        1 optional	string			         message;	// 错误信息，如果成功，则为空
+        2 optional	vector<ViewDetailForYy>	 details;	// 观点详情
+        3 optional	int	                     records;	// 总数
+    };
+
+    struct GetViewDetailRsp
+    {
+        0 optional	RET_CODE		    iRet;		// 返回码
+        1 optional	string			    message;	// 错误信息，如果成功，则为空
+        2 optional	ViewDetail	        details;	// 观点详情
+        3 optional	int	                isFavorite;	// 当前用户是否点赞该观点
+    };
+
+    struct SetViewCommentReq
+    {
+        0 optional	BasicInfo	           userInfo;	  // 用户信息
+        1 optional	int			           viewId;	      // 观点id
+        2 optional  ViewCommentBasicInfo   comment;       // 评论
+    };
+
+    struct SetViewCommentRsp
+    {
+        0 optional	RET_CODE		    iRet;		// 返回码
+        1 optional	string			    message;	// 错误信息，如果成功，则为空
+    };
+
+    struct SetViewFavoritesReq
+    {
+        0 optional	BasicInfo	           userInfo;	  // 用户信息
+        1 optional	int			           viewId;	      // 观点id
+    };
+
+    struct SetViewFavoritesRsp
+    {
+        0 optional	RET_CODE		    iRet;		// 返回码
+        1 optional	string			    message;	// 错误信息，如果成功，则为空
+    };
+
+    struct SetViewReadCountReq
+    {
+        0 optional	BasicInfo	           userInfo;	  // 用户信息
+        1 optional	int			           viewId;	      // 观点id
+    };
+
+    struct SetViewReadCountRsp
+    {
+        0 optional	RET_CODE		    iRet;		// 返回码
+        1 optional	string			    message;	// 错误信息，如果成功，则为空
+    };
+
+    struct SetViewRewardCountReq
+    {
+        0 optional	BasicInfo	      userInfo;	  // 用户信息
+        1 optional	int			      viewId;	  // 观点id
+    };
+
+    struct SetViewRewardCountRsp
+    {
+        0 optional	RET_CODE		 iRet;		// 返回码
+        1 optional	string			 message;	// 错误信息，如果成功，则为空
+    };
+
+    //观点保存
+    struct SaveViewReq
+    {
+         0 optional	BasicInfo	        userInfo;	    // 用户信息
+         1 optional	ViewBasicInfo  	    viewBasicInfo;	// 观点详情(保存观点)
+    };
+    struct SaveViewRsp
+    {
+          0 optional	RET_CODE		    iRet;		// 返回码
+          1 optional	string			    message;	// 错误信息，如果成功，则为空
+    };
+
+    //观点删除
+    struct DeleteViewByIdReq
+    {
+         0 optional	BasicInfo	        userInfo;	    // 用户信息
+         1 optional	ViewBasicInfo  	    viewBasicInfo;	// 观点详情
+    };
+    struct DeleteViewByIdRsp
+    {
+          0 optional	RET_CODE		    iRet;		// 返回码
+          1 optional	string			    message;	// 错误信息，如果成功，则为空
+    };
+
+    //投顾后台单个观点查询
+    struct GetViewDetailByIdReq
+    {
+          0 optional	BasicInfo	        userInfo;	    // 用户信息
+          1 optional	int	                id;             // 观点id
+    };
+    struct GetViewDetailByIdRsp
+    {
+          0 optional	RET_CODE		    iRet;		    // 返回码
+          1 optional	string			    message;	    // 错误信息，如果成功，则为空
+          2 optional	ViewDetail	        details;        // 观点详情
+    };
+
+    //观点修改
+    struct UpdateViewByIdReq
+    {
+         0 optional	BasicInfo	        userInfo;	    // 用户信息
+         1 optional	ViewBasicInfo  	    viewBasicInfo;	// 观点详情
+    };
+
+    struct UpdateViewByIdRsp
+    {
+          0 optional	RET_CODE		    iRet;		// 返回码
+          1 optional	string			    message;	// 错误信息，如果成功，则为空
+    };
+
+    //投顾后台观点列表
+    struct GetViewsReq
+    {
+          0 optional	BasicInfo	        userInfo;	    // 用户信息
+          1 optional	string  	        keyWord;	    // 查询关键字
+          2 optional	string  	        orderByColumn;	// 查询关键字
+          3 optional    int                 offset;         // 偏移量, 默认为0
+          4 optional    int                 size;           // 长度，如果为-1则获取所有的数据
+    };
+
+    struct GetViewsRsp
+    {
+          0 optional	RET_CODE		        iRet;		// 返回码
+          1 optional	string			        message;	// 错误信息，如果成功，则为空
+          2 optional	vector<ViewDetail>	    details;    // 观点详情
+          3 optional	int	                    records;    //总数量
+    };
+
+
+    //投顾后台观点草稿箱列表
+    struct GetDraftsViewsReq
+    {
+         0 optional	BasicInfo	        userInfo;	    // 用户信息
+         1 optional	string  	        keyWord;	    // 查询关键字
+         2 optional	string  	        orderByColumn;	// 查询关键字
+         3 optional int                 offset;         // 偏移量, 默认为0
+         4 optional int                 size;           // 长度，如果为-1则获取所有的数据
+    };
+    struct GetDraftsViewsRsp
+    {
+          0 optional	RET_CODE		        iRet;		// 返回码
+          1 optional	string			        message;	// 错误信息，如果成功，则为空
+          2 optional	vector<ViewDetail>	    details;    // 观点详情
+          3 optional	int	                    records;    //总数量
+    };
+
+    //投顾个人观点的数量(总数，免费，收费)
+    struct GetViewCountsReq
+    {
+         0 optional	BasicInfo	        userInfo;	    // 用户信息
+    };
+    struct GetViewCountsRsp
+    {
+          0 optional	RET_CODE		    iRet;		  // 返回码
+          1 optional	string			    message;	  // 错误信息，如果成功，则为空
+          2 optional	int	                allCount;     //总数量(除去草稿和删除的数量)
+          3 optional	int	                freeCount;    //免费笔记的总数
+          4 optional	int	                chargeCount;  //收费笔记的总数
+          5 optional	int	                allEarnings;  //总收益
+    };
+
+    struct GetViewOperationDataReq
+     {
+            0 optional	BasicInfo	          userInfo;	      // 用户信息
+            1 optional  string                type;           //区分是何种运营位
+            2 optional  int                   offset;         // 偏移量, 默认为0
+            3 optional  int                   size;           // 长度，如果为-1则获取所有的数据
+     };
+
+    struct GetViewOperationDataRsp
+     {
+             0 optional	RET_CODE		    iRet;		    // 返回码
+             1 optional	string			    message;	    // 错误信息，如果成功，则为空
+             2 optional	vector<ViewDetailForYy>	details;	// 观点数据列表
+             3 optional	int	                records;        //总数量
+     };
+
+     struct GetViewOperationDataByTypeReq
+      {
+             0 optional	 BasicInfo	           userInfo;	   // 用户信息
+             1 optional  string                type;           //区分是何种运营位
+             2 optional  int                   offset;         // 偏移量, 默认为0
+             3 optional  int                   size;           // 长度，如果为-1则获取所有的数据
+      };
+
+     struct GetViewOperationDataByTypeRsp
+      {
+              0 optional	RET_CODE		    iRet;		    // 返回码
+              1 optional	string			    message;	    // 错误信息，如果成功，则为空
+              2 optional	vector<ViewDetailForYy>	details;	// 观点数据列表
+              3 optional	int	                records;        //总数量
+      };
+
+     struct SetViewOperationDataReq
+      {
+             0 optional	BasicInfo	         userInfo;	     // 用户信息
+             1 optional  int                 viewId;         //观点id
+             2 optional  string              type;           //区分是何种运营位
+             3 optional  string              operationType;  //设置或者取消设置运营位
+             4 optional  int                 weight;         //页面排序权重
+             5 optional  string              imageUrl;       //推荐图片连接url
+      };
+
+     struct SetViewOperationDataRsp
+      {
+              0 optional	RET_CODE		    iRet;		    // 返回码
+              1 optional	string			    message;	    // 错误信息，如果成功，则为空
+              2 optional	string	            imgUrl;	        // 运营位图片连接地址
+      };
+
+      struct GetViewListReq                     //运营后台管理部分使用-观点列表
+      {
+           0 optional	BasicInfo	        userInfo;	    // 用户信息
+           1 optional	string			    keyWord;	        // 条件查询关键字
+           2 optional	string			    orderByColumn;	// 排序列
+           3 optional   int                 offset;         // 偏移量, 默认为0
+           4 optional   int                 size;           // 长度，如果为-1则获取所有的数据
+      };
+
+      struct GetViewListRsp                      //运营后台管理部分使用-观点列表
+      {
+            0 optional	RET_CODE		    iRet;		     // 返回码
+            1 optional	string			    message;	     // 错误信息，如果成功，则为空
+            2 optional	vector<ViewDetail>	details;         // 观点详情
+            3 optional  int                 records;         //总记录数
+      };
+
+    struct GetViewCommentListReq                     //运营后台管理部分使用-评论列表
+    {
+         0 optional	BasicInfo	        userInfo;	    // 用户信息
+         1 optional	string			    keyWord;	        // 条件查询关键字
+         2 optional	string			    orderByColumn;	// 排序列
+         3 optional int                 offset;         // 偏移量, 默认为0
+         4 optional int                 size;           // 长度，如果为-1则获取所有的数据
+    };
+
+    struct GetViewCommentListRsp                      //运营后台管理部分使用-评论列表
+    {
+          0 optional	RET_CODE		        iRet;		     // 返回码
+          1 optional	string			        message;	     // 错误信息，如果成功，则为空
+          2 optional	vector<ViewCommentGl>	details;         // 观点评论详情
+          3 optional    int                     records;         //总记录数
+    };
+
+     struct OperateViewsReq                     //运营管理后台观点审核，上下架
+     {
+          0 optional	BasicInfo	        userInfo;	     // 用户信息
+          1 optional    int                 viewId;          //观点基本信息
+          2 optional    string              operationType;   //审核操作
+     };
+
+    struct OperateViewsRsp                  //运营管理后台观点审核，上下架
+    {
+           0 optional	RET_CODE		    iRet;		    // 返回码
+           1 optional	string			    message;	    // 错误信息，如果成功，则为空
+    };
+
+    struct  DelViewCommentReq                   //运营管理后台观点评论删除
+    {
+         0 optional	BasicInfo	            userInfo;	    // 用户信息
+         1 optional vector<string>          commentIds;     //评论id,多个的话用逗号隔开
+    };
+
+    struct DelViewCommentRsp                      //运营管理后台观点评论删除
+    {
+          0 optional	RET_CODE		    iRet;		     // 返回码
+          1 optional	string			    message;	     // 错误信息，如果成功，则为空
+    };
+
+   struct  GetViewsByKeyWordReq                   //根据观点标题模糊匹配
+   {
+        0 optional	BasicInfo	            userInfo;	    // 用户信息
+        1 optional  string                  keyWord;       //搜索关键字
+        2 optional  int                     offset;         // 偏移量, 默认为0
+        3 optional  int                     size;           // 长度
+   };
+
+  struct GetViewsByKeyWordRsp                      //根据观点标题模糊匹配
+  {
+         0 optional	RET_CODE		         iRet;		     // 返回码
+         1 optional	string			         message;	     // 错误信息，如果成功，则为空
+         2 optional	vector<ViewDetail>	     details;	     // 搜索结果集
+         3 optional	int			             records;	     // 总数
+  };
+
+    ///////////////////////////////////// 用户相关的结构 /////////////////////////////////
+    struct UserInfoReq
+    {
+        0 optional   BasicInfo       basicInfo;    // 基本信息
+        1 optional   int             userId;       // 用户id
+    };
+
+    struct UserInfoRsp
+    {
+        0 optional	RET_CODE			iRet;		// 返回码
+        1 optional	string			    message;	// 错误信息，如果成功，则为空
+        2 optional	UserInfo			userInfo;	// 用户信息
+    };
+
+
+    struct TgInfoRsp
+    {
+        0 optional	RET_CODE			iRet;		// 返回码
+        1 optional	string			    message;	// 错误信息，如果成功，则为空
+        2 optional	TgInfo			    tgInfo;	    // 投顾信息
+        3 optional	vector<UserTag>	    userTag;	// 投顾标签
+        4 optional	int			        focus;	    // 是否被关注,
+        5 optional	int			        fans;	    // 粉丝数
+    };
+
+    struct UpdateUserRsp
+    {
+        0 optional	RET_CODE			iRet;		// 返回码
+        1 optional	string			    message;	// 错误信息
+    };
+
+    struct UserTagRsp
+    {
+        0 optional	RET_CODE			iRet;		// 返回码
+        1 optional	string			    message;	// 错误信息，如果成功，则为空
+        2 optional	vector<UserTag>	    userTag;	// 用户标签
+    };
+
+    struct UpdateUserInfoReq
+    {
+        0 optional   BasicInfo       basicInfo;    // 基本信息
+        1 optional   UserInfo        userInfo;     // 用户信息
+    };
+
+    struct UpdateTgInfoReq
+    {
+        0 optional    BasicInfo       basicInfo;            // 基本信息
+        1 optional    TgInfo          tgInfo;               // 投顾信息
+        2 optional    int             onlyUpdateCache = 0;  // 是否只更新DCache 0：更新table+DCache；1：只更新DCache
+    };
+
+    struct SetUserTagReq
+    {
+        0 optional    BasicInfo       basicInfo;         // 基本信息
+        1 optional    UserTag         userTag;           // 用户标签
+        2 optional    int             isUpdateTable = 0; // 是否更新数据库 1：更新数据库+更新DCache；0：只更新DCache
+    };
+
+    struct SetUserTagBatchReq
+    {
+        0 optional    BasicInfo               basicInfo;         // 基本信息
+        1 optional    int                     userId;            // 用户id
+        2 optional    vector<UserTag>         userTag;           // 用户标签
+        3 optional    int                     isUpdateTable = 0; // 是否更新数据库 1：更新数据库+更新DCache；0：只更新DCache
+    };
+
+    struct SetUserTagBatchRsp
+    {
+        0 optional	RET_CODE			iRet;		// 返回码
+        1 optional	string			    message;	// 错误信息
+    };
+
+    struct FollowTgReq
+    {
+        0 optional    BasicInfo       basicInfo;    // 基本信息
+        1 optional    int             tgId;         //投顾id
+        2 optional    int             status;       // 状态 0：取消关注，1：关注
+    };
+
+    struct GetMyTgRsp
+    {
+        0 optional   RET_CODE            iRet;       // 返回码
+        1 optional   string              message;    // 错误信息，如果成功，则为空
+        2 optional  vector<TgDetail>     list;       //  投顾列表
+    };
+
+    struct GetTgListReq
+    {
+        0 optional   BasicInfo       basicInfo;    // 基本信息
+        1 optional   int             offset;       // 偏移
+        2 optional   int             size;         // 大小
+    };
+
+    struct TgListRsp
+    {
+        0 optional   int                 total;       // 投顾总数
+        1 optional   vector<TgDetail>    list;       //  投顾列表
+    };
+
+    struct GetTgListRsp
+    {
+        0 optional   RET_CODE            iRet;       // 返回码
+        1 optional   string              message;    // 错误信息，如果成功，则为空
+        2 optional   TgListRsp           data;       //  投顾列表
+    };
+
+    struct GetUserInfoBatchReq
+    {
+        0 optional    BasicInfo       basicInfo;    // 基本信息
+        1 optional    vector<int>     users;        // 用户id
+    };
+
+    struct GetUserInfoBatchRsp
+    {
+        0 optional	RET_CODE			iRet;		// 返回码
+        1 optional	string			    message;	// 错误信息，如果成功，则为空
+        2 optional	vector<UserInfo>	users;	    // 用户信息
+    };
+
+    struct GetTgInfoBatchReq
+    {
+        0 optional    BasicInfo       basicInfo;    // 基本信息
+        1 optional    vector<int>     users;        // 用户id
+        2 optional    int             fromDCache=0;   // 从内存还是从dcache读数据
+    };
+
+    struct GetTgInfoBatchRsp
+    {
+        0 optional	RET_CODE			iRet;		// 返回码
+        1 optional	string			    message;	// 错误信息，如果成功，则为空
+        2 optional	vector<TgInfo>	    users;	    // 投顾数据
+    };
+
+    struct GetTgDetailBatchRsp
+    {
+        0 optional	RET_CODE			iRet;		// 返回码
+        1 optional	string			    message;	// 错误信息，如果成功，则为空
+        2 optional	vector<TgDetail>	tgDetail;	// 投顾详情
+    };
+
+    struct TgIdRsp
+    {
+        0 optional  RET_CODE            iRet;       // 返回码
+        1 optional  string              message;    // 错误信息，如果成功，则为空
+        2 optional  vector<int>      iaUserId;    // 投顾Id
+    };
+
+
+    struct LiveInfo
+    {
+        0 optional  int                 id;         // 直播id;
+        1 optional  string              title;      // 直播室名字
+        2 optional  int                 userId;     // 投顾id;
+        3 optional  int                 status;     // 直播室状态
+    };
+
+    struct TgLiveInfo
+    {
+        0 optional  TgInfo              tgInfo;     // 投顾信息
+        1 optional  vector<UserTag>     userTag;    // 投顾标签
+        2 optional  LiveInfo            liveInfo;    // 直播室信息
+    };
+
+    struct GetMyLiveReq
+    {
+        0 optional   BasicInfo       basicInfo;    // 基本信息
+        1 optional   int             offset;       // 偏移
+        2 optional   int             size;         // 大小
+    };
+
+    struct MyLive
+    {
+        0 optional  StageLiveBasicInfo  stageLiveBasicInfo; // 分期直播信息
+        1 optional  TgDetail            tgDetail;           // 错误信息，如果成功，则为空
+    };
+
+    struct MyLiveRsp
+    {
+        0 optional  int                total;          // 总数
+        1 optional  vector<MyLive>     list;           // 直播信息
+    };
+
+    struct GetMyLiveRsp
+    {
+        0 optional  RET_CODE            iRet;          // 返回码
+        1 optional  string              message;       // 错误信息，如果成功，则为空
+        2 optional  MyLiveRsp           data;          // 直播信息
+    };
+
+    struct GetUserIdReq
+    {
+        0 optional   BasicInfo       basicInfo;    // 基本信息
+        1 optional   string          userName;     // 用户名
+        2 optional   int             isGen;        // 是否生成id，1：如果userName对应的id不存在，生成id；0：如果用户id不存在，不做处理
+        3 optional   int             type = 1;     // 1：普通用户；2：投顾
+    };
+
+    struct GetUserIdRsp
+    {
+        0 optional  RET_CODE            iRet;          // 返回码
+        1 optional  string              message;       // 错误信息，如果成功，则为空
+        2 optional  int                 userId;        // 用户Id
+    };
+
+    struct UpdateTagReq
+    {
+        0 optional   BasicInfo       basicInfo;    // 基本信息
+        1 optional   int             status;       // 状态 0：增加；1：修改；2：删除
+        2 optional   Tag             tag;          // 标签
+    };
+
+    struct UpdateTagRsp
+    {
+        0 optional  RET_CODE            iRet;          // 返回码
+        1 optional  string              message;       // 错误信息，如果成功，则为空
+    };
+
+    struct GetTagsReq
+    {
+        0 optional   BasicInfo       basicInfo;    // 基本信息
+    };
+
+    struct GetTagsRsp
+    {
+        0 optional  RET_CODE            iRet;          // 返回码
+        1 optional  string              message;       // 错误信息，如果成功，则为空
+        2 optional  vector<Tag>         list;          // 标签
+    };
+
+    struct GetTgReq
+    {
+        0 optional   BasicInfo       basicInfo;    // 基本信息
+        1 optional   int             size;         // 每页显示多少条数据
+        2 optional   int             offset;       // 偏移量
+        3 optional   int             type;         // 1是加载投顾推荐运营位数据，0是加载投顾排序数据
+        4 optional   string          keyWord;       //搜索关键字
+    };
+
+
+    struct GetTgRsp
+    {
+        0 optional   RET_CODE             iRet;       // 返回码
+        1 optional   string               message;    // 错误信息，如果成功，则为空
+        2 optional   vector<TgDetailYy>   list;       //  投顾列表
+        3 optional   int                  records;    // 总数
+    };
+
+    struct SetTgReq
+    {
+        0 optional   BasicInfo       basicInfo;    // 基本信息
+        1 optional   int             recommend;    // 是否被推荐1是，0否
+        2 optional   int             weight;       // 推荐权重
+        3 optional   int             type;         // 0投顾排序,1投顾推荐排序,后续有其他推荐再补充
+    };
+
+
+    struct SetTgRsp
+    {
+        0 optional   RET_CODE       iRet;       // 返回码
+        1 optional   string         message;    // 错误信息，如果成功，则为空
+    };
+
+    struct GetTgsByKeyWordReq
+    {
+        0 optional   BasicInfo       basicInfo;    // 基本信息
+        1 optional   string          keyWord;     // 搜索关键字
+        2 optional  int              offset;      // 偏移量, 默认为0
+        3 optional  int              size;        // 长度
+    };
+
+
+    struct GetTgsByKeyWordRsp
+    {
+        0 optional   RET_CODE             iRet;       // 返回码
+        1 optional   string               message;    // 错误信息，如果成功，则为空
+        2 optional   vector<TgDetailYy>   details;    //搜索结果
+        3 optional	int			          records;	  // 总数
+    };
+
+    ///////////////////////////////////// 组合相关的结构 /////////////////////////////////
+    struct SearchPortfolioApp
+    {
+        0 optional int          id;             // 组合ID
+        1 optional int          userId;         // 投顾ID
+        2 optional string       portfolioName;  // 组合名字
+        3 optional string       userName;       // 投顾名字
+        4 optional string       imgUrl;         // 投顾头像Url
+    };
+
+    struct SearchPortfolioAppReq
+    {
+        0 optional BasicInfo  basicInfo;    // 基本信息
+        1 optional string     condition;    // 查询关键字
+        2 optional int        size;         // 查询数量
+        3 optional int        offset;       // 起始位置
+    };
+
+    struct SearchPortfolioAppRsp
+    {
+        0 optional int                         iRet;     // 返回code,0成功，-1失败
+        1 optional string               message;    // 返回消息
+        2 optional  vector<SearchPortfolioApp>  data;       // 返回数据
+        3 optional  int                         total;      // 返回数据长度
+    };
+
+    //首页组合列表
+     struct GetAlreadyStarListReq
+     {
+         0 optional   BasicInfo       basicInfo;    // 基本信息
+         1 optional   int             offset;       //取数据起始位置
+         2 optional   int             size;         //取多少条
+         3 optional   string          keyword;     //名称关键字
+     };
+
+     struct GetAlreadyStarListRsp
+     {
+         0   optional	int                     iRet;	   // 返回code,0成功，-1失败
+         1   optional	string			        message;   // 返回消息
+         2   optional	PortfolioPageData		data;      // 返回数据
+     };
+
+
+     // 投顾的组合
+     struct SearchPortfolioListByUserIdReq
+     {
+         0 optional   BasicInfo       basicInfo;    // 基本信息
+         1 optional   int             userId;       // 投顾ID
+         2 optional   int             offset;       //取数据起始位置
+         3 optional   int             size;         //取多少条
+     };
+
+     struct SearchPortfolioListByUserIdRsp
+     {
+         0   optional	int                     iRet;	   // 返回code,0成功，-1失败
+         1   optional	string			        message;   // 返回消息
+         2   optional	PortfolioPageData		data;      // 返回数据
+     };
+
+      //调仓历史
+      struct PortfolioStockBargainHisReq
+       {
+          0 optional   BasicInfo                basicInfo;    // 基本信息
+          1 optional   int                      portfolioId;  //组合ID
+          2 optional   int             offset;       //取数据起始位置
+          3 optional   int             size;         //取多少条
+       };
+
+       struct PortfolioStockBargainHisRsp
+       {
+          0   optional	int                                 iRet;	   // 返回code,0成功，-1失败
+          1   optional	string			                    message;   // 返回消息
+          2   optional	vector<PortfolioStockChange>		data;      //调仓信息（见TgComm.jce）
+          3   optional  int                                 total;     // 总条数
+       };
+
+      //今日调仓
+      struct PortfolioStockBargainReq
+      {
+         0 optional   BasicInfo                basicInfo;    // 基本信息
+         1 optional   int                      portfolioId;  //组合ID
+         2 optional   int             offset;       //取数据起始位置
+         3 optional   int             size;         //取多少条
+      };
+
+      struct PortfolioStockBargainRsp
+      {
+         0   optional	int                                 iRet;	   // 返回code,0成功，-1失败
+         1   optional	string			                    message;   // 返回消息
+         2   optional	vector<PortfolioStockChange>		data;      //调仓信息（见TgComm.jce）
+         3   optional   int                                 total;     // 总条数
+      };
+
+      //组合持仓详情
+      struct PortfolioStockHoldDetailReq
+      {
+         0 optional   BasicInfo                basicInfo;    // 基本信息
+         1 optional   int                      portfolioId;  //组合ID
+      };
+
+      struct PortfolioStockHoldDetailRsp
+      {
+          0   optional	int                         iRet;	   // 返回code,0成功，-1失败
+          1   optional	string			            message;   // 返回消息
+          2   optional	PortfolioStockDetail		data;      //持仓信息（见TgComm.jce）
+      };
+
+     //组合详情
+     struct ViewDetailReq
+     {
+         0 require    BasicInfo                basicInfo;    // 基本信息
+         1 optional   int                      portfolioId;  //组合ID
+         2 optional   int                      userId;       //当前用户ID（可以为空）
+     };
+
+     struct ViewDetailRsp
+     {
+         0   require	    int                 iRet;	   // 返回code,0成功，-1失败
+         1   optional	string			    message;   // 返回消息
+         2   optional	PortfolioDetail		data;      //组合信息（见TgComm.jce）
+         3   optional    int                 isSubscribe;//是否订阅 0否 1是
+     };
+
+     //订阅免费组合
+    struct SubscribeFreePortfolioReq
+    {
+        0  optional   BasicInfo                basicInfo;           // 基本信息
+        1  optional   int                      portfolioId;         // 组合ID
+        2  optional   int                      userId;              // 订阅者ID
+        3  optional   string                   portfolioName;       // 组合名称
+        4  optional   string                   userName;            // 订阅者姓名
+        5  optional   string                   accountId;           // 资金账号
+        6  optional   string                   userRealName;        // 用户真实姓名
+        7  optional   string                   company;             // 订单所属分公司
+        8  optional   string                   department;          // 订单所属部门
+        9  optional   string                   userPhone;           // 用户手机号
+        10 optional   double                   sale;                // 售价
+        11 optional   int                      tgId;                // 投顾ID
+        12 optional   string                   tgName;              // 投顾名称
+    };
+
+     struct SubscribeFreePortfolioRsp
+     {
+         0   optional	int             iRet;	   // 返回code,0成功，-1失败
+         1   optional	string			message;   // 返回消息
+     };
+
+     struct CreateUserActionRecordReq
+     {
+         0 optional int          userId;              // 用户ID
+         1 optional string       userName;            // 用户名
+         2 optional string       accountId;           // 资金账号
+         3 optional string       userPhone;           // 用户手机号
+         4 optional string       userMobileId;        // 用户设备号
+         5 optional string       userIp;              // 用户IP
+         6 optional string       userRiskLevel;       // 用户风险等级
+         7 optional string       productRiskLevel;    // 产品风险等级
+         8 optional int          type;                // 产品类型1:组合,2:观点
+         9 optional int          status;              // 0：订阅；1：取消订阅
+         10 optional int         productId;           // 产品ID
+         11 optional string      productName;         // 产品名称
+     };
+
+     struct CreateUserActionRecordRsp
+     {
+         0   optional int             iRet;    // 返回code,0成功，-1失败
+         1   optional string   message;   // 返回消息
+     };
+
+     struct QueryPortfolioRelationReq
+     {
+          0 optional     BasicInfo                   basicInfo;    // 基本信息
+          1 optional     int                         portfolioId;  //组合ID
+     };
+
+     struct QueryPortfolioRelationRsp
+     {
+         0   require	int                                 iRet;	   // 返回code,0成功，-1失败
+         1   optional	string			                    message;   // 返回消息
+         2   optional   PortfolioVarInfo                    relationInfo;          //相关数据
+     };
+
+     //取消订阅组合
+     struct CancelSubscribeReq
+     {
+         0 optional   BasicInfo                basicInfo;    // 基本信息
+         1 optional   int                      portfolioId;  // 组合ID
+         2 optional   int                      userId;       // 订阅者ID
+         3 optional   string                   accountId;    // 资金账号
+     };
+
+     struct CancelSubscribeRsp
+     {
+         0   optional	int             iRet;	   // 返回code,0成功，-1失败
+         1   optional	string			message;   // 返回消息
+     };
+
+     //根据类型获取组合列表
+     struct QueryByPortfolioTypeReq
+     {
+         0 optional   BasicInfo              basicInfo;    // 基本信息
+         1 optional   int                    type;         //组合类型（1:胜率高，2：新组合，3：最人气）
+         2 optional   int                    offset;       //取数据起始位置
+         3 optional   int                    size;         //取多少条
+     };
+
+     struct QueryByPortfolioTypeRsp
+     {
+         0   optional	int                     iRet;	   // 返回code,0成功，-1失败
+         1   optional	string			        message;   // 返回消息
+         2   optional	PortfolioPageData		data;      //组合分页信息（见TgComm.jce）
+     };
+
+      //根据类型获取组合列表
+     struct QueryTradeMaxNumReq
+     {
+         0 optional      BasicInfo   basicInfo;      // 基本信息
+         1 require 		int    		userCode;	    // 客户代码
+         2 optional 		byte	   	market;		    // 交易市场  '48' 上海   '49' 深圳
+         3 optional 		string   	secuAcc;	    // 股东代码
+         4 optional 		string   	secuCode;	    // 证券代码
+         5 optional 		byte	   	trdID;		    // 交易行为    48是买，49卖
+         6 optional 		double 		price;		    // 价格
+     };
+
+     struct QueryTradeMaxNumRsp
+     {
+         0   optional	int             iRet;	    // 返回code,0成功，-1失败
+         1   optional	string			message;    // 返回消息
+         2   optional	int 	        maxQty;		// 股份数量
+     };
+
+    //  获取组合运行期间每日收益（供收益曲线图用）
+    struct QueryPortfolioAllProfitReq
+    {
+        0 optional      BasicInfo                basicInfo;     // 基本信息
+        1 optional      int                      portfolioId;   // 组合ID
+        2 optional      string                   beginDate;     // 开始日期
+        3 optional      string                   endDate;       // 结束日期
+        4 optional      int                      len;           // 获取记录条数
+        5 optional      int                      type;          // 0:自然日数据,1:交易日数据
+        6 optional      int                      isFilter;      // 是否筛选返回数据(0: 不进行筛选,1...:为筛选条数)
+    };
+
+    struct QueryPortfolioAllProfitRsp
+    {
+        0   optional	int                                 iRet;	   // 返回code,0成功，-1失败
+        1   optional	string			                    message;   // 返回消息
+        2   optional	vector<PortfolioProfitChartData>    data;      // 收益数据数据
+    };
+
+     // 跟组合 － 运行中
+     struct RunPortfoliosReq
+     {
+         0 optional   BasicInfo       basicInfo;        // 基本信息
+         1 optional   int             offset;           // 取数据起始位置
+         2 optional   int             size;             // 取多少条
+         3 optional   string          targetFilter;     // 笔记运算符和数值以逗号分隔，如eq,10(等于10)|lt,10(小于10)|gt,30(大于10)|btw,30,60（30到60之间)
+         4 optional   string          costFilter;       // 笔记运算符和数值以逗号分隔，如eq,10(等于10)|lt,10(小于10)|gt,30(大于10)|btw,30,60（30到60之间)
+         5 optional   string          durationFilter;   // 笔记运算符和数值以逗号分隔，如eq,10(等于10)|lt,10(小于10)|gt,30(大于10)|btw,30,60（30到60之间)
+         6 optional   string          orderBy;          // profitRate,dayNetValue,maxDrawdown,successRate，rankRise取其中之一
+         7 optional   string          orderType;        // desc,asc取其中之一
+     };
+
+     struct RunPortfoliosRsp
+     {
+         0   optional	int                 iRet;	   // 返回code,0成功，-1失败
+         1   optional	string			    message;   // 返回消息
+         2   optional	PortfolioPageData   data;      // 返回数据
+     };
+
+     // 跟组合 － 已结束
+     struct EndPortfoliosReq
+     {
+         0 optional   BasicInfo       basicInfo;        // 基本信息
+         1 optional   int             offset;           // 取数据起始位置
+         2 optional   int             size;             // 取多少条
+         3 optional   string          targetFilter;     // 笔记运算符和数值以逗号分隔，如eq,10(等于10)|lt,10(小于10)|gt,30(大于10)|btw,30,60（30到60之间)
+         4 optional   string          costFilter;       // 笔记运算符和数值以逗号分隔，如eq,10(等于10)|lt,10(小于10)|gt,30(大于10)|btw,30,60（30到60之间)
+         5 optional   string          durationFilter;   // 笔记运算符和数值以逗号分隔，如eq,10(等于10)|lt,10(小于10)|gt,30(大于10)|btw,30,60（30到60之间)
+         6 optional   string          orderBy;          // target,cost,duration,start_time取其中之一
+         7 optional   string          orderType;        // desc,asc取其中之一
+     };
+
+     struct EndPortfoliosRsp
+     {
+         0   optional	int                     iRet;	   // 返回code,0成功，-1失败
+         1   optional	string			        message;   // 返回消息
+         2   optional	PortfolioPageData		data;      // 返回数据
+     };
+
+    //创建组合
+    struct CreatePortfolioReq
+    {
+        0 optional    BasicInfo                basicInfo;         // 基本信息
+        1 optional    PortfolioBasicInfo       portfolioBasic;    // 组合信息
+    };
+
+    struct CreatePortfolioRsp
+    {
+        0   optional	int             iRet;	        // 返回code,0成功，-1失败
+        1   optional	string			message;        // 返回消息
+        2   optional    int             portfolioId;    // 新建组合ID
+    };
+
+    //更新组合信息
+    struct UpdatePortfolioReq
+    {
+        0 optional    BasicInfo                basicInfo;         // 基本信息
+        1 optional    PortfolioBasicInfo       portfolioBasic;    // 组合信息
+    };
+
+    struct UpdatePortfolioRsp
+    {
+        0   optional	    int             iRet;	   // 返回code,0成功，-1失败
+        1   optional	    string			message;   // 返回消息
+    };
+
+    //组合调仓
+    struct PortfolioBargainOrderReq
+    {
+        0   optional        BasicInfo             basicInfo;        // 基本信息
+        1   optional	    int			          tgId;             // 投顾ID
+        2   optional	    int			          portfolioId;      // 组合ID
+        3   optional	    string			      market;           // 交易所代码
+        4   optional	    string			      entrustValue;     // 委托价格
+        5   optional	    string			      secuCode;         // 股票代码
+        6   optional	    string			      matchCount;       // 交易数量
+        7   optional	    string			      dealFlag;         // 买卖标志，0买入1卖出
+    };
+
+    struct PortfolioBargainOrderRsp
+    {
+        0   optional	    int             iRet;	    // 返回code,0成功，-1失败
+        1   optional	    string			message;    // 返回消息
+        2   optional	    string			data;       // 调仓记录ID
+    };
+
+    //保存组合调仓理由
+    struct PortfolioBargainReasonReq
+    {
+        0   optional    BasicInfo            basicInfo;             // 基本信息
+        1   optional	int			         portFolioRecordId;     // 调仓记录ID（组合调仓接口返回）
+        2   optional	string			     reason;                // 调仓理由
+    };
+
+    struct PortfolioBargainReasonRsp
+    {
+        0   optional	    int             iRet;	   // 返回code,0成功，-1失败
+        1   optional	    string			message;   // 返回消息
+    };
+
+    //跟组合 －订阅中(web)
+    struct NotStartPortfoliosReq
+    {
+        0   optional   BasicInfo       basicInfo;       // 基本信息
+        1   optional   int             offset;          // 取数据起始位置
+        2   optional   int             size;            // 取多少条
+        3   optional   string          targetFilter;    // 笔记运算符和数值以逗号分隔，如eq,10(等于10)|lt,10(小于10)|gt,30(大于10)|btw,30,60（30到60之间)
+        4   optional   string          costFilter;      // 笔记运算符和数值以逗号分隔，如eq,10(等于10)|lt,10(小于10)|gt,30(大于10)|btw,30,60（30到60之间)
+        5   optional   string          durationFilter;  // 笔记运算符和数值以逗号分隔，如eq,10(等于10)|lt,10(小于10)|gt,30(大于10)|btw,30,60（30到60之间)
+        6   optional   string          orderBy;         // target,cost,duration,start_time取其中之一
+        7   optional   string          orderType;       // desc,asc取其中之一
+    };
+
+    struct NotStartPortfoliosRsp
+    {
+        0   optional	int                     iRet;	   // 返回code,0成功，-1失败
+        1   optional	string			        message;   // 返回消息
+        2   optional	PortfolioPageData		data;      // 返回数据
+    };
+
+    //向交易服务注册组合
+    struct RegisterPortfolioToStockServiceReq
+    {
+        0   optional   BasicInfo                basicInfo;          // 基本信息
+        1   optional   int                      portfolioId;        // 组合ID
+        2   optional   string                   startDate;          // 开始时间 yyyy-MM-dd
+        3   optional   string                   endDate;            // 结束时间 yyyy-MM-dd
+        4   optional   int                      capital;            // 启动资金
+        5   optional   double                   target;             // 目标收益率
+        6   optional   int                      closePosition;      // 平仓线（止损线）
+    };
+
+    struct RegisterPortfolioToStockServiceRsp
+    {
+        0   optional    int             iRet;	   // 返回code,0成功，-1失败
+        1   optional	string			message;   // 返回消息
+    };
+
+    //推荐组合
+    struct RecommendPortfolioReq
+    {
+        0   optional   BasicInfo                basicInfo;        // 基本信息
+        1   optional   int                      portfolioId;      //组合ID
+        2   optional   string                   recommendKey;     //组合推荐位
+        3   optional   int                      weights;    //权重
+    };
+
+    struct RecommendPortfolioRsp
+    {
+        0   optional	int             iRet;	   // 返回code,0成功，-1失败
+        1   optional	string			message;   // 返回消息
+    };
+
+    //预售组合轮播
+    struct QueryRecommendPortfoliosReq
+    {
+        0 optional    BasicInfo       basicInfo;    // 基本信息
+        1 optional   string           recommendKey;     //组合推荐位
+    };
+
+    struct PortfolioDetailWithWeigths
+    {
+        0 optional PortfolioDetail      detail;   //原推荐位组合信息
+        1 optional int                  weights;  //权重
+    };
+
+    struct QueryRecommendPortfoliosRsp
+    {
+        0   optional	int                         iRet;	   // 返回code,0成功，-1失败
+        1   optional	string			            message;   // 返回消息
+        2   optional	vector<PortfolioDetailWithWeigths>		data;      // 返回数据
+    };
+
+    /**
+    *    组合推荐位
+    *    首页轮播 = index
+    *    高收益 = highProfits
+    *
+    */
+
+    //未开始和运行中的组合
+    struct QueryNotStartRunningReq
+    {
+        0 optional   BasicInfo       basicInfo;    // 基本信息
+        1 optional   int             offset;       //取数据起始位置
+        2 optional   int             size;         //取多少条
+        3 optional   string          keyword;     //名称关键字
+    };
+
+    struct QueryNotStartRunningRsp
+    {
+        0   optional	int                     iRet;	   // 返回code,0成功，-1失败
+        1   optional	string			        message;   // 返回消息
+        2   optional	PortfolioPageData		data;      // 返回数据
+    };
+
+    struct QueryFreePortfolioReq
+        {
+            0 optional   BasicInfo                basicInfo;    // 基本信息
+            1 optional   int                      userId;       //订阅者ID
+            2 optional   int                      offset;       //偏移量
+            3 optional   int                      size;        //每页数据量
+
+        };
+
+
+    struct QueryFreePortfolioRsp
+    {
+        0   optional	int                      iRet;	   // 返回code,0成功，-1失败
+        1   optional	string			         message;   // 返回消息
+        2   optional    PortfolioPageData        data;      // 返回数据
+    };
+
+    struct BannerRecommend
+    {
+        0 optional int  type;   //推荐位类型
+        1 optional string  keyword;    //关键字
+        2 optional string  name;  //简介
+        3 optional int priority; //权重
+        4 optional string imgUrl; //推荐位图片URL
+    };
+
+    struct SaveBannerRecommendReq
+    {
+        0 optional BasicInfo  basicInfo;    // 基本信息
+        1 optional vector<BannerRecommend>  list; //所有推荐位
+    };
+
+    struct SaveBannerRecommendRsp
+    {
+        0 optional	int             iRet;	   // 返回code,0成功，-1失败
+        1 optional	string			message;   // 返回消息
+    };
+
+    struct QueryBannerRecommendReq
+    {
+        0 optional BasicInfo  basicInfo;    // 基本信息
+    };
+
+    struct QueryBannerRecommendRsp
+    {
+        0 optional	int             iRet;	   // 返回code,0成功，-1失败
+        1 optional	string			message;   // 返回消息
+        2 optional  vector<BannerRecommend>  data;  // 返回数据
+    };
+
+    struct BannerRecommendApp
+    {
+        0 optional string  url;   //推荐位跳转URL
+        1 optional string imgUrl; //推荐位图片URL
+    };
+
+    struct QueryBannerRecommendAppReq
+    {
+        0 optional BasicInfo  basicInfo;    // 基本信息
+    };
+
+    struct QueryBannerRecommendAppRsp
+    {
+        0 optional	int             iRet;	   // 返回code,0成功，-1失败
+        1 optional	string			message;   // 返回消息
+        2 optional  vector<BannerRecommendApp>  data;  // 返回数据
+    };
+
+    //取消推荐组合
+    struct CancelRecommendPortfolioReq
+    {
+        0   optional   BasicInfo                basicInfo;        // 基本信息
+        1   optional   int                      portfolioId;      //组合ID
+        2   optional   string                   recommendKey;     //组合推荐位
+    };
+
+    struct CancelRecommendPortfolioRsp
+    {
+        0   optional	int             iRet;	   // 返回code,0成功，-1失败
+        1   optional	string			message;   // 返回消息
+    };
+
+    struct GetBusinessByKeyWordReq
+    {
+        0 optional  GetTgsByKeyWordReq       getTgsByKeyWordReq;     // 投顾用搜索条件
+        1 optional  GetViewsByKeyWordReq     getViewsByKeyWordReq;   // 观点用搜索条件
+        2 optional  GetLivesByKeyWordReq     getLivesByKeyWordReq;   // 直播用搜索条件
+        3 optional  SearchPortfolioAppReq    searchPortfolioAppReq;  // 组合用搜索条件
+    };
+
+    struct GetBusinessByKeyWordRsp
+    {
+        0 optional	int                                   iRet;	    // 返回code
+        1 optional	string			                      message;   // 返回消息
+        2 optional  GetTgsByKeyWordRsp       getTgsByKeyWordRsp;     // 投顾搜索结果
+        3 optional  GetViewsByKeyWordRsp     getViewsByKeyWordRsp;   // 观点搜索结果
+        4 optional  GetLivesByKeyWordRsp     getLivesByKeyWordRsp;   // 直播搜索结果
+        5 optional  SearchPortfolioAppRsp    searchPortfolioAppRsp;  // 组合搜索结果
+    };
+
+    struct AddSensitiveWordReq
+    {
+        0 optional  BasicInfo       basicInfo;          // 基本信息
+        1 optional	SensitiveWord   sensitiveWord;      // 敏感词信息
+    };
+
+    struct AddSensitiveWordRsp
+    {
+        0 optional	RET_CODE			            iRet;		         // 返回码
+        1 optional	string			                message;	         // 返回信息
+    };
+
+    struct UpdateSensitiveWordReq
+    {
+        0 optional  BasicInfo       basicInfo;          // 基本信息
+        1 optional	SensitiveWord   sensitiveWord;      // 敏感词信息
+    };
+
+    struct UpdateSensitiveWordRsp
+    {
+        0 optional	RET_CODE			            iRet;		         // 返回码
+        1 optional	string			                message;	         // 返回信息
+    };
+
+    struct GetSensitiveWordReq
+    {
+        0 optional  BasicInfo       basicInfo;    // 基本信息
+        1 optional	string          keyWord;      // 搜索关键字
+        2 optional	int             offset;       // 偏移
+        3 optional	int             size;         // 偏移
+    };
+
+    struct GetSensitiveWordRsp
+    {
+        0 optional	RET_CODE			            iRet;		         // 返回码
+        1 optional	string			                message;	         // 返回信息
+        2 optional	vector<SensitiveWord>	        details;	         // 搜索结果
+        3 optional	int	                            records;	         // 总数
+    };
+
+    struct GetSensitiveWordByIdReq
+    {
+        0 optional  BasicInfo       basicInfo;    // 基本信息
+        1 optional	int             id;          // id
+    };
+
+    struct GetSensitiveWordByIdRsp
+    {
+        0 optional	RET_CODE			            iRet;		         // 返回码
+        1 optional	string			                message;	         // 返回信息
+        2 optional	SensitiveWord	                sensitiveWord;	     // 搜索结果
+    };
+
+    // 20170822 新增批量获取直播间最近一条直播内容;
+    struct StageLiveNoticeBatch
+    {
+        0 optional  int                             liveId;       // 直播室id
+        1 optional  int                             stageLiveId;  // 分期直播id
+        2 optional  int                             maxId;        // 最大的直播内容id
+    };
+
+    struct StageLiveNoticeBatchReq
+    {
+        0 optional  BasicInfo                       basicInfo;              // 基本信息
+        1 optional  vector<StageLiveNoticeBatch>    stageLiveNoticeBatch;   // 分期直播id
+    };
+
+    struct StageLiveNoticeList
+    {
+        0 optional	int			        total;		       // 未读消息总数
+        1 optional	LiveContent			latestContent;	   // 最新的一条消息
+    };
+
+    struct StageLiveNoticeBatchRsp
+    {
+        0 optional	RET_CODE			            iRet;		       // 返回码
+        1 optional	string			                message;	       // 返回信息
+        2 optional  vector<StageLiveNoticeList>     data;              // 最新消息内容
+    };
+
+    struct SwitchStageLiveStatusReq
+    {
+        0 optional  BasicInfo           basicInfo;        // 基本信息
+        1 optional  int                 stageId;          // 分期直播室id
+        2 optional  int                 flag;             // 状态 1：开启；2：关闭
+    };
+
+    struct SwitchStageLiveStatusRsp
+    {
+        0 optional	RET_CODE			        iRet;		       // 返回码
+        1 optional	string			            message;	       // 返回信息
+    };
+
+    interface TgAccess
+    {
+        //////////////////////////////////// 直播 //////////////////////////////////////
+
+         // 切换直播状态
+        int switchStageLiveStatus(SwitchStageLiveStatusReq stReq, out SwitchStageLiveStatusRsp stRsp);
+
+
+         // 分批获取分期直播内容更新提醒
+        int stageLiveNoticeBatch(StageLiveNoticeBatchReq stReq, out StageLiveNoticeBatchRsp stRsp);
+
+        // 获取直播室信息
+        int getLiveBasicInfo(GetLiveBasicInfoReq stReq, out GetLiveBasicInfoRsp stRsp);
+
+        // 批量获取分期直播
+        int getLatestStageBatchByUid(GetLatestStageBatchByUidReq stReq, out GetLatestStageBatchByUidRsp stRsp);
+
+        // 获取投顾的分期直播信息
+        int getStageLiveListByUid(GetStageLiveListByUidReq stReq, out GetStageLiveListByUidRsp stRsp);
+
+        // 创建直播室
+        int createLive(CreateLiveReq stReq, out CreateLiveRsp stRsp);
+
+        // 创建分期直播
+        int createLiveByStageSubmit(CreateLiveByStageSubmitReq stReq, out CreateLiveByStageSubmitRsp stRsp);
+
+        // 最热的分期直播列表
+        int getHottestStageList(GetHottestStageListReq stReq, out GetHottestStageListRsp stRsp);
+
+        // 查看分期直播
+        int viewStageLive(ViewStageLiveReq stReq, out ViewStageLiveRsp stRsp);
+
+        // 加入分期直播
+        int joinStageLive(JoinStageLiveReq stReq, out JoinStageLiveRsp stRsp);
+
+        // 点赞分期直播
+        int favoriteStageLive(FavoriteStageLiveReq stReq, out FavoriteStageLiveRsp stRsp);
+
+        // 精选分期直播列表
+        int featuredStageLiveList(FeaturedStageLiveListReq stReq, out FeaturedStageLiveListRsp stRsp);
+
+        // 发表互动消息
+        int pushStageMessage(PushStageMessageReq stReq, out PushStageMessageRsp stRsp);
+
+        // 删除互动
+        int deleteJunkData(DeleteJunkDataReq stReq, out DeleteJunkDataRsp stRsp);
+
+        // 拉取分期直播互动消息
+        int pullLiveStageMessage(PullLiveStageMessageReq stReq, out PullLiveStageMessageRsp stRsp);
+
+        // 拉取分期直播互动详情（含用户拉黑信息）
+        int pullLiveStageMessageDetail(PullLiveStageMessageReq stReq, out PullLiveStageMessageDetailRsp stRsp);
+
+        // 查询直播互动
+        int queryLiveMsgByCondition(QueryLiveMsgByConditionReq stReq, out QueryLiveMsgByConditionRsp stRsp);
+
+        // 获取互动消息
+        int pullMsg(PullMsgReq stReq, out PullMsgRsp stRsp);
+
+        // 发布分期直播内容
+        int pushStageContent(PushStageContentReq stReq, out PushStageContentRsp stRsp);
+
+        // 删除直播内容
+        int delLiveContent(DelLiveContentReq stReq, out DelLiveContentRsp stRsp);
+
+        // 拉取分期直播内容
+        int pullStageLiveContent(PullStageLiveContentReq stReq, out PullStageLiveContentRsp stRsp);
+
+        // 推荐直播列表，website对应web首页-精彩直播推荐位，其它对应app-banner推荐位
+        int queryRecommendLives(QueryRecommendLivesReq stReq, out QueryRecommendLivesRsp stRsp);
+
+        // web看直播-热门直播
+        int queryHotLives(QueryHotLivesReq stReq, out QueryHotLivesRsp stRsp);
+
+        // 设置/取消推荐位 web看直播-精彩直播
+        int setFavoriteLive(SetFavoriteLiveReq stReq, out SetFavoriteLiveRsp stRsp);
+
+        // 设置/取消推荐位 web看直播-热门直播
+        int setHotLive(SetHotLiveReq stReq, out SetHotLiveRsp stRsp);
+
+        // 设置/取消推荐位 app-火热直播
+        int setTopForBanner(SetTopForBannerReq stReq, out SetTopForBannerRsp stRsp);
+
+        // 设置/取消推荐位 app-火热直播
+        int setTopForApp(SetTopForAppReq stReq, out SetTopForAppRsp stRsp);
+
+        // 设置/取消推荐位 app-热门直播
+        int setHotTopForApp(SetHotTopForAppReq stReq, out SetHotTopForAppRsp stRsp);
+
+        // 设置/取消精彩互动
+        int setHotLiveMessage(SetHotLiveMessageReq stReq, out SetHotLiveMessageRsp stRsp);
+
+        // 获取精彩互动
+        int queryRecommendMessages(QueryRecommendMessagesReq stReq, out QueryRecommendMessagesRsp stRsp);
+
+        // 修改直播参与人数
+        int editLive(EditLiveReq stReq, out EditLiveRsp stRsp);
+
+        // 切换直播状态
+        int switchLiveStatus(SwitchLiveStatusReq stReq, out SwitchLiveStatusRsp stRsp);
+
+        // 最热的分期直播列表
+        int queryLatestLives(QueryLatestLivesReq stReq, out QueryLatestLivesRsp stRsp);
+
+        // 直播字典（直播类型）
+        int queryTypes(QueryTypesReq stReq, out QueryTypesRsp stRsp);
+
+        // 根据类型查询分期直播列表
+        int queryByStageLiveType(QueryByStageLiveTypeReq stReq, out QueryByStageLiveTypeRsp stRsp);
+
+        // 分期直播内容更新提醒
+        int stageLiveNotice(StageLiveNoticeReq stReq, out StageLiveNoticeRsp stRsp);
+
+        // 我的直播红点提示
+        int getLiveStageRedDot(GetLiveStageRedDotReq stReq, out GetLiveStageRedDotRsp stRsp);
+
+        // 投顾审核(开通直播室+更新用户类型）
+        int openUserLive(OpenUserLiveReq stReq, out OpenUserLiveRsp stRsp);
+
+        // 设置禁言
+        int setGag(SetGagReq stReq, out SetGagRsp stRsp);
+
+        // 获取直播室列表
+        int getLiveList(GetLiveListReq stReq, out GetLiveListRsp stRsp);
+
+        // 获取直播室下的所有分期直播详情
+        int getStageLiveDetailList(GetStageLiveDetailListReq stReq, out GetStageLiveDetailListRsp stRsp);
+
+        // 更新直播室信息
+        int updateLiveSubmit(UpdateLiveSubmitReq stReq, out UpdateLiveSubmitRsp stRsp);
+
+        // 获取直播室基本信息
+        int getLiveBasicInfoByUid(GetLiveBasicInfoByUidReq stReq, out GetLiveBasicInfoByUidRsp stRsp);
+
+        // 修改分期直播信息
+        int editStageLiveBasicInfoById(EditStageLiveReq stReq, out EditStageLiveRsp stRsp);
+
+        // 获取所有正在进行的分期直播
+        int getStageLiveList(GetStageLiveListReq stReq, out GetStageLiveListRsp stRsp);
+
+        // 修改直播内容
+        int editLiveContent(EditLiveContentReq stReq, out EditLiveContentRsp stRsp);
+
+        // 根据关键字模糊匹配直播室
+        int getLivesByKeyWord(GetLivesByKeyWordReq stReq, out GetLivesByKeyWordRsp stRsp);
+
+
+        //////////////////////////////////// 观点 //////////////////////////////////////
+        // 获取观点详情列表
+        int getViewDetails(GetViewDetailsReq stReq, out GetViewDetailsRsp stRsp);
+
+        // 获取单个观点详情
+        int getViewDetail(GetViewDetailReq stReq, out GetViewDetailRsp stRsp);
+
+        // 获取观点评论
+        int getViewComment(GetViewCommentReq stReq, out GetViewCommentRsp stRsp);
+
+        //保存观点评论
+        int saveViewComment(SetViewCommentReq stReq, out SetViewCommentRsp stRsp);
+
+        //保存点赞
+        int saveViewFavorites(SetViewFavoritesReq stReq, out SetViewFavoritesRsp stRsp);
+
+        //保存阅读数
+        int saveViewReadCounts(SetViewReadCountReq stReq, out SetViewReadCountRsp stRsp);
+
+        //保存观点打赏数
+        int saveViewRewardCounts(SetViewRewardCountReq stReq, out SetViewRewardCountRsp stRsp);
+
+        //根据投顾用户id查找投顾的观点
+        int getTgViewDetailsByTgId(GetTgViewDetailsReq stReq, out GetTgViewDetailsRsp stRsp);
+
+        //投顾后台观点列表
+        int getViews(GetViewsReq stReq, out GetViewsRsp stRsp);
+
+        //投顾后台草稿观点列表
+        int getDraftsViews(GetDraftsViewsReq stReq, out GetDraftsViewsRsp stRsp);
+
+        //投顾后台单个观点详情
+        int getViewDetailById(GetViewDetailByIdReq stReq, out GetViewDetailByIdRsp stRsp);
+
+        //投顾后台观点修改
+        int updateViewById(UpdateViewByIdReq stReq, out UpdateViewByIdRsp stRsp);
+
+        //投顾后台观点删除
+        int deleteViewById(DeleteViewByIdReq stReq, out DeleteViewByIdRsp stRsp);
+
+        //投顾后台创建观点
+        int saveView(SaveViewReq stReq, out SaveViewRsp stRsp);
+
+        //投顾后台观点类型数量统计(总数，免费观点数量，收费观点数量,观点总收益)
+        int getViewCountsAndEarnings(GetViewCountsReq stReq, out GetViewCountsRsp stRsp);
+
+        //运营后台获取运营位数据列表
+        int getViewOperationData(GetViewOperationDataReq stReq, out GetViewOperationDataRsp stRsp);
+
+        //运营后台设置或者取消运营位
+        int setViewOperationData(SetViewOperationDataReq stReq, out SetViewOperationDataRsp stRsp);
+
+        //给web提供设置了运营位的观点列表
+        int getViewOperationDataByType(GetViewOperationDataByTypeReq stReq, out GetViewOperationDataByTypeRsp stRsp);
+
+        //运营管理后台管理部分观点列表
+        int getViewList(GetViewListReq stReq, out GetViewListRsp stRsp);
+
+        //运营管理后台管理部分观点审核上下架
+        int operateViews(OperateViewsReq stReq, out OperateViewsRsp stRsp);
+
+        //运营管理后台管理部分观点评论列表
+        int getViewCommentList(GetViewCommentListReq stReq, out GetViewCommentListRsp stRsp);
+
+        //运营管理后台管理部分观点评论删除
+        int delViewComment(DelViewCommentReq stReq, out DelViewCommentRsp stRsp);
+
+        //根据观点标题模糊搜索观点
+        int getViewsByKeyWord(GetViewsByKeyWordReq stReq, out GetViewsByKeyWordRsp stRsp);
+
+        //////////////////////////////////// 用户 //////////////////////////////////////
+        // 获取用户信息
+        int getUserInfo(UserInfoReq stReq, out UserInfoRsp stRsp);
+
+        // 批量获取用户信息
+        int getUserInfoBatch(GetUserInfoBatchReq stReq, out GetUserInfoBatchRsp stRsp);
+
+        // 更新用户信息
+        int updateUserInfo(UpdateUserInfoReq stReq, out UpdateUserRsp stRsp);
+
+        // 获取投顾信息
+        int getTgInfo(UserInfoReq stReq, out TgInfoRsp stRsp);
+
+        // 批量获取投顾信息
+        int getTgInfoBatch(GetTgInfoBatchReq stReq, out GetTgInfoBatchRsp stRsp);
+
+        // 批量获取投顾详细信息，包括基本的用户信息和投顾信息
+        int getTgDetailBatch(GetTgInfoBatchReq stReq, out GetTgDetailBatchRsp stRsp);
+
+        // 更新投顾信息
+        int updateTgInfo(UpdateTgInfoReq stReq, out UpdateUserRsp stRsp);
+
+        // 获取用户标签
+        int getUserTag(UserInfoReq stReq, out UserTagRsp stRsp);
+
+        // 设置用户标签
+        int setUserTag(SetUserTagReq stReq, out UpdateUserRsp stRsp);
+
+        // 批量设置用户标签到DCache
+        int setUserTagBatch(SetUserTagBatchReq stReq, out SetUserTagBatchRsp stRsp);
+
+        // 关注投顾
+        int followTg(FollowTgReq stReq, out BasicRsp stRsp);
+
+        // 我的投顾
+        int getMyTg(UserInfoReq stReq,out GetMyTgRsp stRsp);
+
+        // 投顾列表-所有投顾关注和非关注的
+        int getTgList(GetTgListReq stReq, out GetTgListRsp stRsp);
+
+        // 关注的投顾的直播室
+        int getMyLive(GetMyLiveReq stReq,out GetMyLiveRsp stRsp);
+
+        // 获取用户Id
+        int getUserId(GetUserIdReq stReq,out GetUserIdRsp stRsp);
+
+        // 增/删/改 标签
+        int updateTag(UpdateTagReq stReq, out UpdateTagRsp stRsp);
+
+        // 获取标签
+        int getTags(GetTagsReq stReq, out GetTagsRsp stRsp);
+
+        //获取推荐投顾列表
+        int getRecommendTgListForYy(GetTgReq stReq, out GetTgRsp stRsp);
+
+        //获取推荐投顾列表
+        int getRecommendTgList(GetTgReq stReq, out GetTgRsp stRsp);
+
+        //设置或者取消推荐投顾
+        int setRecommendTg(SetTgReq stReq, out SetTgRsp stRsp);
+
+        //根据投顾昵称搜索投顾
+        int getTgsByKeyWord(GetTgsByKeyWordReq stReq, out GetTgsByKeyWordRsp stRsp);
+
+        //////////////////////////////////// 组合 //////////////////////////////////////
+    //-----------------------------------------------移动app----------------------------------------------------------------------
+        //未开始和运行中的组合
+        int queryNotStartRunning(QueryNotStartRunningReq stReq, out QueryNotStartRunningRsp stRsp);
+
+        //首页组合列表
+        int getAlreadyStartList(GetAlreadyStarListReq stReq, out GetAlreadyStarListRsp stRsp);
+
+        //预售组合轮播
+        int queryRecommendPortfolios(QueryRecommendPortfoliosReq stReq, out QueryRecommendPortfoliosRsp stRsp);
+
+        //投顾的组合 （app/投顾后台）
+        int searchPortfolioListByUserId(SearchPortfolioListByUserIdReq stReq, out SearchPortfolioListByUserIdRsp stRsp);
+
+        //调仓历史  （app/投顾后台）
+        int portfolioStockBargainHis(PortfolioStockBargainHisReq stReq ,out PortfolioStockBargainHisRsp stRsp);
+
+        //今日调仓（app/投顾后台）
+        int portfolioStockBargain(PortfolioStockBargainReq stReq ,out PortfolioStockBargainRsp stRsp);
+
+        //组合持仓详情（app/投顾后台）
+        int portfolioStockHoldDetail(PortfolioStockHoldDetailReq stReq ,out PortfolioStockHoldDetailRsp stRsp);
+
+        //组合详情 （app/投顾后台）
+        int viewDetail(ViewDetailReq stReq ,out ViewDetailRsp stRsp);
+
+        //订阅免费组合
+        int subscribeFreePortfolio(SubscribeFreePortfolioReq stReq ,out SubscribeFreePortfolioRsp stRsp);
+
+        //取消订阅组合
+        int cancelSubscribe(CancelSubscribeReq stReq ,out CancelSubscribeRsp stRsp);
+
+        //根据类型获取组合列表
+        int queryByPortfolioType(QueryByPortfolioTypeReq stReq ,out QueryByPortfolioTypeRsp stRsp);
+
+        //最大可买股票数量
+        int queryTradeMaxNum(QueryTradeMaxNumReq stReq ,out QueryTradeMaxNumRsp stRsp);
+
+        //取消推荐组合
+        int cancelRecommendPortfolio(CancelRecommendPortfolioReq stReq ,out CancelRecommendPortfolioRsp stRsp);
+
+        //组合搜索
+        int searchPortfolioApp(SearchPortfolioAppReq stReq,out SearchPortfolioAppRsp stRsp);
+
+        // 记录用户留痕信息
+        int createUserActionRecord(CreateUserActionRecordReq stReq ,out CreateUserActionRecordRsp stRsp);
+
+        // 查询组合衍生数据
+        int queryPortfolioRelation(QueryPortfolioRelationReq stReq, out QueryPortfolioRelationRsp stRsp);
+
+    //------------------------------------------- 投顾后台 -----------------------------------------------------------------------
+
+        //  获取组合运行期间每日收益（供收益曲线图用）
+        int queryPortfolioAllProfit(QueryPortfolioAllProfitReq stReq, out QueryPortfolioAllProfitRsp stRsp);
+
+        //跟组合 －订阅中
+        int queryNotStartPortfolios(NotStartPortfoliosReq stReq, out NotStartPortfoliosRsp stRsp);
+
+        //跟组合 － 运行中
+        int queryRunPortfolios(RunPortfoliosReq stReq, out RunPortfoliosRsp stRsp);
+
+        //跟 组合 － 已结束
+        int queryEndPortfolios(EndPortfoliosReq stReq, out EndPortfoliosRsp stRsp);
+
+        //创建组合
+        int createPortfolio(CreatePortfolioReq stReq,out CreatePortfolioRsp stRsp);
+
+        //更新组合信息
+        int updatePortfolio(UpdatePortfolioReq stReq,out UpdatePortfolioRsp stRsp);
+
+        //添加组合调仓记录
+        int portfolioBargainOrder(PortfolioBargainOrderReq stReq,out PortfolioBargainOrderRsp stRsp);
+
+        //保存组合调仓理由
+        int portfolioBargainReason(PortfolioBargainReasonReq stReq,out PortfolioBargainReasonRsp stRsp);
+
+        //向交易服务注册组合
+        int registerPortfolioToStockService(RegisterPortfolioToStockServiceReq stReq ,out RegisterPortfolioToStockServiceRsp stRsp);
+
+        //推荐组合
+        int recommendPortfolio(RecommendPortfolioReq stReq ,out RecommendPortfolioRsp stRsp);
+
+        //取用户所有订阅组合
+        int queryFreePortfolio(QueryFreePortfolioReq stReq ,out QueryFreePortfolioRsp stRsp);
+
+        //保存banner推荐位
+        int saveBannerRecommend(SaveBannerRecommendReq  stReq,out SaveBannerRecommendRsp stRsp);
+
+        //查询所有banner推荐位(运营后台格式)
+        int queryBannerRecommend(QueryBannerRecommendReq  stReq,out QueryBannerRecommendRsp stRsp);
+
+        //查询所有banner推荐位(app格式)
+        int queryBannerRecommendApp(QueryBannerRecommendAppReq stReq,out QueryBannerRecommendAppRsp stRsp);
+
+        //根据关键字模糊搜索直播室(名称)，观点(标题)，投顾(昵称)，组合(名称)
+        int getBusinessByKeyWord(GetBusinessByKeyWordReq stReq, out GetBusinessByKeyWordRsp stRsp);
+
+
+        //新增敏感词
+        int addSensitiveWord(AddSensitiveWordReq stReq, out AddSensitiveWordRsp stRsp);
+
+        //修改敏感词
+        int updateSensitiveWord(UpdateSensitiveWordReq stReq, out UpdateSensitiveWordRsp stRsp);
+
+        //查询敏感词(分页)
+        int getSensitiveWord(GetSensitiveWordReq stReq, out GetSensitiveWordRsp stRsp);
+
+        //查询敏感词(按照id查)
+        int getSensitiveWordById(GetSensitiveWordByIdReq stReq, out GetSensitiveWordByIdRsp stRsp);
+
+
+
+    };
+
+};

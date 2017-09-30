@@ -1,0 +1,124 @@
+.wrapper {
+    .header_point {
+        .title {
+            font-size: 25px;
+            color: #000;
+            line-height: 35px;
+            letter-spacing: 0.5px;
+            margin:10px 0 0 14px;
+        }
+        .date_info {
+            font-size: 13px;
+            color: #858C9E;
+            margin:20px 0 0 14px;
+            .time {
+                margin-right: 13px;
+            }
+        }
+        .title_mess {
+            font-size: 17px;
+            color: #000;
+            letter-spacing: 1px;
+            padding: 0 9px 20px 45px; 
+            line-height: 24px;
+            margin-top: 29px;
+            position: relative;
+            &::before {
+                content: "";
+                width: 7px;
+                height: 7px;
+                background-color: #FF3D00;
+                border-radius: 50%;
+                position: absolute;
+                left: 22px; 
+                top: 9px;
+            }
+            &::after{
+                content: "";
+                width: 100px;
+                height: 2px;
+                position: absolute;
+                background-color: #FF3D00;
+                bottom: 0;
+                right: 50%;
+                margin-right: -50px;
+            }
+        }
+    }
+
+    .content_free_point {
+        padding: 25px 12px 0 17px;
+        font-size: 18px;
+        color: #333333;
+        letter-spacing: 1.6px;
+        line-height: 28px;
+        p {
+            margin-bottom: 33px;
+            &:last-child{
+                margin: 0
+            }
+        }
+    }
+
+    .footer {
+        padding: 0 9px 20px 45px;
+        margin-top: 20px;
+        font-size: 14px;
+        color: #979DAB;
+        line-height: 20px;
+        position: relative;
+        margin-bottom: 50px;
+        &::before {
+            content: '!';
+            position: absolute;
+            background-color: #D9DEEA;
+            color: #fff;
+            width: 14px;
+            height: 14px;
+            text-align: center;
+            line-height: 14px;
+            top: 3px;
+            left: 17px;
+            border-radius: 50%;
+        }
+    }
+
+    .fixed_box {
+        position: fixed;
+        bottom: 0;
+        background-color: #F8F9FB;
+        width: 100%;
+        height: 50px;
+        padding: 6px 11px 6px 16px;
+        box-sizing: border-box;
+        .portrait {
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            vertical-align: text-bottom;
+        }
+        .name_and_ID {
+            display: inline-block;
+            margin-left: 10px;
+            .name {
+                font-size: 16px;
+                color: #333;
+                line-height: 23px;
+            }
+            .ID_info {
+                font-size: 12px;
+                color: #979DAB;
+                line-height: 12px;
+                .occupation {
+                    margin-right: 10px;
+                }
+            }
+        }
+        .like_info {
+            display: inline-block;
+            float: right;
+            line-height: 23px;
+        }
+    }
+}

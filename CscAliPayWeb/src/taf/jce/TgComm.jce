@@ -1,0 +1,938 @@
+module ETG
+{
+        enum RET_CODE
+        {
+            OK= 0,     // 成功
+            PARAM_INVALID= -101,   // 参数非法
+            NO_LOGIN= -102,  // 未登陆
+            USER_NOT_EXIST= -103,  // 用户不存在
+            PERMISSION_DENY= -104,  // 没有权限
+            TIMEOUT= -105,  // 超时
+            QUERY_ERROR= -106,  // 查询失败
+            LIVE_TITLE_NULL_ERROR= -5001, // 请输入直播标题
+            LIVE_SUMMARY_NULL_ERROR= -5002, // 请输入直播摘要
+            ALREADY_CREATE_LIVE= -5003, // 当前用户已经创建过直播
+            LIVE_NOT_EXIST_ERROR= -5004, // 直播不存在
+            LIVE_PUSH_CONTENT_ERROR= -5005, // 只有投顾才能直播
+            LIVE_PUSH_MESSAGE_ERROR= -5006, // 只有用户才能互动
+            LIVE_ID_NULL_ERROR= -5007, // 请输入直播ID
+            LIVE_TITLE_DUPLICATE_ERROR= -5008, // 直播室名字重复
+            LIVE_FAVORITE_ALREADY= -5009, // 您今天已经赞过了
+            LIVE_CONTENT_ID= -5010, // 直播内容ID不能为空
+            LIVE_ID= -5011, // 直播室ID不能为空
+            LIVE_STAGE_ID= -5012, // 分期直播室ID不能为空
+            LIVE_NO_SAYING= -5013, // 您已被禁言，不能发表评论
+            LIVE_STAGE_NOT_EXIST= -5014, // 分期直播室不存在
+            LIVE_STAGE_NOT_LIVE1= -5015, // 分期直播已结束，不能直播
+            LIVE_STAGE_NOT_LIVE2= -5016, // 分期直播已结束，不能评论
+            LIVE_STAGE_NOT_LIVE3= -5017, // 分期直播已结束，不能点赞
+            LIVE_STAGE_NOT_LATEST= -5018, // 无法评论，请到直播室最新一期进行评论。
+            LIVE_PUSH_MESSAGE_SPAN= -5019, // 连续互动需间隔5秒
+            LIVE_CONTENT_NOT_EXIST= -5050, // 直播内容不存在
+            UNKNOWN = -9999 ,  // 未知错误
+
+            SUCCESS = 0, //正确返回
+            ERROR = -999, //服务器未知错误
+            SIGN_ERROR = -1, //参数验签失败
+            ENCRYPT_ERROR = -2, //加解密错误
+            DATE_FORMAT_ERROR = -3, //时间格式错误
+            JSON_FORMAT_ERROR = -4, //JSON格式错误
+            PAGE_MAX_ID = -5, //分页最大ID不能为空
+
+            REGISTER_SUCCESS = -10000, //注册成功
+            REGISTER_EXIST_USER = -10002, //用户名已存在
+            REGISTER_MISS_PARAM = -10003, //缺失参数
+            REGISTER_PHONENUM_ERROR = -10004, //手机号码错误
+            REGISTER_SYSTEM_ERROR = -10005, //系统错误
+            REGISTER_USER_HAVE_REGIST = -10006, //用户已经认证
+            REGISTER_VERIFYCODE_OUTTIME = -10007, //验证码过期
+            REGISTER_USER_HAVE_PHONENUM = -10009, //用户无手机号码
+            REGISTER_PHONENUM_HAVE_REGIST = -10010, //手机号码已认证
+            REGISTER_SENT_THRID_TIMES = -10021, //十五分钟已连续发送三次
+            REGISTER_CODE_ERROR = -10023, //验证码错误
+
+            //输入参数错误
+            USERID_NULL_ERROR = -1001, //用户ID不能为空
+            USERNAME_NULL_ERROR = -1002, //用户名字不能为空
+            PORTRAITURI_NULL_ERROR = -1002, //用户头像不能为空
+            USER_NOT_EXIST_ERROR = -1003, //用户不存在
+            FRIENDID_NULL_ERROR = -1004, //好友ID不能为空
+            GROUP_IMG_NULL_ERROR = -2001, //牛圈头像不能为空
+            GROUP_IMG_NOT_SUPPORT_ERROR = -2002, //请上传jpg,jpeg,gif,png的格式图片
+            GROUP_NAME_ERROR = -2003, //牛圈名字不能为空
+            GROUP_ID_ERROR = -2004, //牛圈ID不能为空
+            GROUP_JOIN_ERROR = -2005, //不能加入牛圈
+            GROUP_CREATE_ERROR = -2006, //牛圈名字不能为空
+            GROUP_UPDATE_ERROR = -2007, //只有创建者才能更新牛圈
+            GROUP_IS_EXIST_ERROR = -2008, //牛圈名称已存在
+            GROUP_NAME_LONG = -2009, //牛圈名字不能超过10个字
+            GROUP_INTRO_EMPTY = -2010, //牛圈简介不能为空
+            GROUP_INTRO_LONG = -2011, //牛圈简介只能是20到70个字
+            TAG_NOT_EXIST_ERROR = -3001, //标签不存在
+            SEARCH_CONDITION_IS_NULL = -3002, //搜索条件为空
+            USERID_FRIENDID_IS_NULL = -3003, //用户ID、好友ID不能为空
+            SEARCH_USER_IS_NULL = -3004, //被搜索的用户名为空
+            CURRENT_USERID_NULL_ERROR = -3005, //当前用户ID为空
+            ANSWERID_NULL_ERROR = -3006, //参数answerIds为空，保存答案失败
+
+            //组合相关
+            PORTFOLIOID_NULL_ERROR = -4001, //组合ID不能为空
+            PORTFOLIO_DEAL_FLAG_NULL_ERROR = -4002, //买卖标志不能为空
+            PORTFOLIO_STOCK_CODE_NULL_ERROR = -4003, //股票代码不能为空
+            PORTFOLIO_STOCK_COUNT_NULL_ERROR = -4004, //股票数量不能为空
+            PORTFOLIO_STOCK_ENTRUST_NULL_ERROR = -4005, //委托价格不能为空
+            PORTFOLIO_NOT_EXIST_ERROR = -4006, //组合不存在
+            PORTFOLIO_NOT_START_ERROR = -4007, //组合还没有启动
+            PORTFOLIO_ALREADY_END_ERROR = -4008, //组合已经结束了
+            PORTFOLIO_TRADE_NOT_CREATOR_ERROR = -4009, //组合调仓用户非组合创建者
+            CREATE_PORTFOLIO_ERRER = -4010, //参数填写不正确
+            PORTFOLIO_TARGET_ERROR = -4011, //组合目标不能是负数
+            NO_SET_PAY_MONEY = -4012, //没有设置收费金额
+            PORTFOLIO_NAME_EXIST = -4013, //组合名称已经存在
+            PORTFOLIO_CREATE_MAX_NUM_EXIST = -4014, //该用户创建组合已经超过上限
+            PORTFOLIO_ID_IS_NULL = -4015, //组合ID为空
+            PORTFOLIO_JYSM_IS_NULL = -4016, //交易码为空
+            PORTFOLIO_WTJG_IS_NULL = -4017, //委托价格为空
+            PORTFOLIO_ZQDM_IS_NULL = -4018, //证券代码为空
+            PORTFOLIO_PARAMETER_IS_ERROR = -4019, //dicKey参数不正确
+            PORTFOLIO_USERID_IS_ERROR = -4020, //当前用户ID是投顾，请用用户ID查询
+            PORTFOLIO_USER = -4021, //前用户是投顾，不能添加好友
+            ADD_USER_NOTE_PORTFOLIO = -4022, //即将添加为好友的用户不是投顾，不能添加为好友
+            PORTFOLIO_IS_FRIEND = -4023, //即将添加为好友的投顾已经是好友，不能重复添加
+            USERID_OR_GRIENDID_IS_NULL = -4024, //userId或者friendId为空，添加好友失败
+            USER_SUBSCRIBULE_ADVISER_MAX_NUM_ERROR = -4025, //超过关注投顾上限
+            PORTFOLIO_SELL_OUT_ERROR = -4026, //组合已经销售完了
+            PORTFOLIO_SOLD_OUT = -4027, //该产品已下架
+            PORTFOLIO_START_TIME = -4028, //开始日期应该在当前日期之后的5-15天范围内
+
+            //笔记相关
+            NOTE_ID_IS_NULL = -6001, //笔记ID为空
+            NOTE_NOT_EXIST = -6002, //笔记不存在
+            NOTE_CHECK_ZAN_FAIL = -6003, //笔记点赞失败
+            NOTE_NOTE_ALLOWED_ZAN = -6004, //不能点赞自己的笔记
+            NOTE_ALREADY_ZAN = -6005, //已经赞过了
+            NOTE_BUY_FAIL = -6006, //购买笔记失败
+            NOTE_CONDITION_IS_NULL = -6006, //userID、payment和orderId不能为空
+            TAGID_NULL_ERROR = -6007, //参数tagIds为空，保存答案失败
+            TAGNAME_NULL_ERROR = -6008, //参数tagNames为空，保存答案失败
+            CONTENT_CONTAIN_SENSITIVE_WORD = -6009, //内容包含敏感词
+            USER_BLACK_LIST = -6010, //您已被拉黑，不能进行评论！
+            NOTE_COMMENT_SPAN = -6011, //连续评论需间隔5秒
+            PARAM_ERROR = -3000, //参数信息错误
+            RONGYUN_ERROR = -1000, //调用融云api返回错误码
+            STOCK_TRADE_ERROR = -4000, //调用股票交易api返回空
+            CRM_ORDER_ERROR = -6000, //调用crm订单api失败
+            TICKET_HAVA_OPENED = -0005, //已刮过奖
+            TICKET_SIGN_ERROR = -0006, //签名错误
+            TICKET_TIMESTAMP_ERROR = -0007, //时间戳错误
+            TICKET_PARAM_ERROR = -0008, //参数错误
+            IP_BAN_ERROR = -0009, //禁止该IP访问
+            VIEW_TYPE_FREE = 1, //免费观点
+            VIEW_TYPE_COST = 2, //收费观点
+            VIEW_TAG_MACROSCOPIC = 1, //宏观
+            VIEW_TAG_STOCK = 2, //个股
+
+            //牛圈相关
+            NIU_GROUP_CREATE_MAX_NUM_ERROR = -7000, //超过创建牛圈上限
+            NIU_GROUP_JOIN_CREATE_MAX_NUM_ERROR = -7001, //超过关注牛圈上限
+            NIU_GROUP_MAX_NUM_ERROR = -7002, //超过最大圈子人数
+            NIU_GROUP_NOT_EXIST_ERROR = -7004, //牛圈不存在
+            GROUPID_NULL_ERROR = -7005, //groupId不能为空
+            GROUP_NAME_NULL_ERROR = -7006, //groupName不能为空
+            GROUP_NAME_AND_GROUPID_ERROR = -7007, //groupId与groupName数量不一致
+            GROUPID_NULL_ERROR1 = -7005, //groupId不能为空
+            NIU_GROUP_FEE = -7008, //不能加入付费牛圈
+            NIU_GROUP_SERVICE_TIME_ERROR = -7009, //圈子服务期最长为6个月
+
+            //锦囊相关
+            SMART_EXPRESS_ID = -9001, //锦囊ID不能为空
+            SMART_EXPRESS_CONTENT_ID = -9001, //锦囊内容ID不能为空
+            SMART_EXPRESS = -9002, //锦囊不存在
+            SMART_EXPRESS_CONTENT = -9003, //锦囊内容不存在
+            SMART_EXPRESS_OUTNUMBER = -9004, //运行中和待启动的锦囊总数不能超过限制
+            SMART_EXPRESS_START_TIME = -9005, //开始日期应该在当前日期之后的2-15天范围内
+            SMART_EXPRESS_END_TIME = -9006, //结束日期应该在开始日期之后的7-60天范围内
+            SMART_EXPRESS_END_ERROR = -9007, //锦囊已经结束
+            SMART_EXPRESS_ACTIVITY_OUT_SIZE = -9001, //超过锦囊最大活动数
+
+            //订单相关
+            ORDER_EXISTS_PAID = -8001, //该内容你已经购买，请到我的订单中查看
+            ORDER_EXISTS_UNPAID = -8002, //该内容你已经提交订单，请到我的订单中支付
+            ORDER_CONTENT_NOT_EXIST = -8003, //购买内容不存在
+            NOTE_ALREAD_DELETE = -8005, //该观点已下架
+            ORDER_NOT_EXIST = -8004, //订单不存在
+            APP_VERSION_NOT_SUPPORT = -8006, //当前版本不支持,请升级到新版本
+            ORDER_ALREADY_PAID = -8007, //订单重复支付
+            ORDER_ACTIVE_NOT_EXIST = -8008, //活动不存在
+            ORDER_ACTIVE_PACKAGE_NOT_EXIST = -8009, //产品包不存在
+            ORDER_ACTIVE_PACKAGE_NOT_PRODUCT = -8010, //产品包下没有产品
+            ORDER_ACTIVE_PACKAGE_ERROR_PRODUCT = -8011, //产品包某个产品不存在
+            ORDER_ACTIVE_PACKAGE_ERROR = -8012 //下单失败
+        };
+
+        struct BasicInfo
+        {
+            0 require	int			    userId;		    // 用户id
+            1 optional	string			token;		    // token
+            2 optional	string			platform;       // 平台，目前平台有：website,ios,android, web, app
+            3 optional	string			device;         // 设备
+            4 optional	string			appId;          // app类型
+            5 optional	string			appVersion;     // app版本号
+            6 optional	string			channel;	    // 渠道
+            7 optional	string			manufacturer;   // 产品制造商
+            8 optional	string			system;	        // 系统
+            9 optional  string          iMei;           // 手机的iMei信息
+        };
+
+        struct BasicPageReq
+        {
+            0 optional	int			     offset;		// 偏移
+            1 optional	int			     size;		    // 数量
+        };
+
+        struct BasicRsp
+        {
+            0 optional	RET_CODE			iRet;		       // 返回码
+            1 optional	string			    message;	       // 返回信息
+        };
+
+        ///////////////////////////////////// 用户相关的基本结构体 /////////////////////////////////////
+        struct UserInfo
+        {
+            0 optional  int             userId;       // 用户id
+            1 optional  string          userName;     // 用户名/昵称
+            2 optional  string          upName;       // 用户名
+            3 optional  string          avatar;       // 头像
+            4 optional  string          email;        // 邮箱
+            5 optional  string          phone;        // 电话
+            6 optional  string          token;        // 融云token
+            7 optional  int             sex;          // 性别 0：女性；1：男性
+            8 optional  int             type;         // 用户类型 1：投顾，2：普通用户
+            9 optional  int             friendCount;  // 粉丝数量
+            10 optional int             expires;      // 过期（用户结算）
+            11 optional float           rate;         // 费率
+            12 optional string          updateTime;   // 更新时间
+            13 optional string          capitalAccount;   // 资金账号
+        };
+
+        struct TgInfo
+        {
+            0 optional  int             id;              // id
+            1 optional  int             userId;          // 用户id
+            2 optional  string          license;         // 执照号
+            3 optional  int             type;            // 1：投资顾问；2：投资达人
+            4 optional  string          name;            // 真实姓名
+            5 optional  string          idCard;          // 身份证号
+            6 optional  string          nickName;        // 昵称
+            7 optional  string          company;         // 工作单位
+            8 optional  int             sex;             // 性别 0：女性；1：男性
+            9 optional  string          province;        // 省
+            10 optional  string         city;            // 市
+            11 optional  string         tel;             // 电话
+            12 optional  string         email;           // 邮箱
+            13 optional  string         qq;              // QQ号
+            14 optional  string         intro;           // 简介
+            15 optional  int            stockAge;        // 股龄
+            16 optional  int            profession;      // 职业 0：职业股民，1：其它
+            17 optional  string         credentialsUrl;  // 证件照
+            18 optional  string         prove;           // 证明
+            19 optional  string         proveUrl;        // 证明图片
+            20 optional  string         updateTime;      // 更新时间
+            21 optional  string         avatar;          // 登记照
+            22 optional  int            status;          // 状态，1：更新信息，2：更新证件照，3：更新简介
+            23 optional  string         halfBodyPhoto;   // 半身照(url)
+            24 optional  string         autoGraph;       // 个性签名
+        };
+
+        struct UserTag
+        {
+            0 optional  int                 id;         // id
+            1 optional  int                 userId;     // 用户id
+            2 optional  int                 tagId;      // 标签id
+            3 optional  string              tagName;    // 标签名
+            4 optional  int                 status;     // 状态
+        };
+
+        struct TgDetail
+        {
+            0 optional	UserInfo			              userInfo;	 // 用户信息
+            1 optional	TgInfo			                  tgInfo;	 // 投顾信息
+            3 optional	vector<UserTag>	                  tagInfo;	 // 投顾标签
+            4 optional  long                              fans = 0;  // 粉丝数目
+            5 optional  int                               focus = 0; //是否被关注
+        };
+
+        struct TgDetailYy
+        {
+            0 optional	UserInfo			              userInfo;	      // 用户信息
+            1 optional	TgDetail			              tgInfo;	      // 投顾全部信息
+            3 optional  int                               focus;          // 是否被关注；1是，0否
+            4 optional  int                               recommend;      // 是否被推荐；1是，0否
+            5 optional  string                            recommendTime;  // 被推荐的时间
+            6 optional  int                               weight;         // 权重
+        };
+
+        struct Tag
+        {
+            0 optional  int                 id;         // id
+            1 optional  string              name;      // 标签名
+        };
+
+        ///////////////////////////////////// 直播相关的基本结构体 /////////////////////////////////////
+        struct LiveBasicInfo
+        {
+            0 require	int		        id;		       // 直播室id
+            1 optional  int             userId;        // 投顾id
+            2 optional  string          title;         // 直播室名称
+            3 optional  string          summary;       // 直播室简介
+            4 optional  int             type;          // 类型 1：免费；2：付费
+            5 optional  double          cost;          // 价格
+            6 optional  int             status;        // 状态
+            7 optional  string          createTime;    // 创建时间
+            8 optional  string          updateTime;    // 更新时间
+        };
+
+        struct LiveDetail
+        {
+            0 optional  LiveBasicInfo        liveBasicInfo;    // 直播室基本信息
+            1 optional  int                  saleCount;        // 售出份数
+            2 optional  TgDetail             tgDetail;         // 投顾详情
+        };
+
+        struct StageLiveBasicInfo
+        {
+            0 require	int		        id;		       // 分期直播id
+            1 optional  int             userId;        // 投顾id
+            2 optional  int             liveId;        // 直播室id
+            3 optional  string          no;            // 分期直播编号
+            4 optional  string          summary;       // 分期直播主题
+            5 optional  int             status;        // 状态 0：结束；1：直播中
+            6 optional  string          createTime;    // 创建时间
+            7 optional  string          updateTime;    // 更新时间
+            8 optional  string          groupId;       // 关联消息系统的群组id
+            9 optional  LiveBasicInfo   liveBasicInfo; // 直播室基本信息
+        };
+
+        struct StageLiveDetail
+        {
+            0 optional  StageLiveBasicInfo   stageLiveBasicInfo;        // 分期直播基本信息
+            1 optional  int                  commentCount;              // 评论数
+            2 optional  int                  favoriteCount;             // 点赞数
+            3 optional  int                  participants;              // 参与人数
+            4 optional  int                  saleCount;                 // 售出份数
+            5 optional  int                  rewardCount;               // 打赏次数
+            6 optional  int                  contentCount;              // 观点数据
+            7 optional  TgDetail             tgDetail;                  // 投顾信息
+        };
+
+        struct LiveContent
+        {
+            0 require	int		        id;		       // 内容id
+            1 optional  int             userId;        // 投顾id
+            2 optional  int             liveId;        // 直播室id
+            3 optional  int             stageLiveId;   // 分期直播id
+            4 optional  int             type;          // 类型 1：系统；2：投顾
+            5 optional  string          content;       // 直播内容
+            6 optional  vector<string>  pics;          // 直播图片
+            7 optional  vector<string>  thumbnails;    // 直播缩略图片
+            8 optional  int             status;        // 状态
+            9 optional  string          createTime;    // 创建时间
+            10 optional string          updateTime;    // 更新时间
+        };
+
+        struct LiveMsg
+        {
+            0 optional  int             id;                 // 消息id
+            1 optional  int             replyId;            // 回复的消息id
+            2 optional  int             userId;             // 用户id
+            3 optional  int             liveId;             // 直播室id
+            4 optional  int             liveStageId;        // 分期直播id
+            5 optional  string          content;            // 消息内容
+            6 optional  int             isDelete;           // 是否删除 1：删除；0：未删除
+            7 optional  int             status;             // 状态
+            8 optional  string          updateTime;         // 更新时间
+        };
+
+        struct LiveDictionary
+        {
+            0 optional	int		        id;		         // 字典id
+            1 optional  string          dicKey;          // key
+            2 optional  string          dicValue;        // value
+            3 optional  int             extraType;       // 扩展类型
+            4 optional  string          extraValue;      // 扩展值
+        };
+
+        struct GagInfo
+        {
+            0 optional	int		        userId;		      // 用户id
+            1 optional	int		        liveId;		      // 直播室id
+            2 optional  int             status;           // 状态 0：未禁言；1：直播室禁言；2：全局禁言；3：直播室+全局禁言
+        };
+
+        struct LiveMsgDetail
+        {
+            0 optional  LiveMsg         msgInfo;
+            1 optional  TgDetail        userInfo;
+            2 optional  LiveMsg         replyInfo;
+            3 optional  TgDetail        replyUserInfo;
+            4 optional  GagInfo         gagInfo;
+        };
+
+        struct StageLive
+        {
+            0 optional	int			                total;		       // 总数
+            1 optional	vector<StageLiveDetail>	    stageLives;	       // 分期直播
+        };
+
+        struct StageLiveMsg
+        {
+            0 optional	int			                total;		       // 总数
+            1 optional	vector<LiveMsgDetail>	    liveMessages;	   // 直播互动消息
+        };
+
+        struct StageLiveContent
+        {
+            0 optional	int			                total;		       // 总数
+            1 optional	vector<LiveContent>	        liveContents;	   // 直播内容
+        };
+
+        struct RecommendMsg
+        {
+            0 optional	LiveMsgDetail			    msgInfo;		       // 消息内容
+            1 optional  TgInfo                      tgInfo;                // 投顾消息
+            2 optional  StageLiveBasicInfo          stageLiveInfo;         // 分期直播信息
+        };
+
+        struct StageLiveNotice
+        {
+            0 optional	int			        total;		       // 未读消息总数
+            1 optional	LiveContent			latestContent;	   // 最新的一条消息
+        };
+
+		///////////////////////////////////// 观点相关的基本结构体 /////////////////////////////////////
+		 struct ViewBasicInfo
+        {
+            0 optional	int		            id;		       // 观点id
+            1 optional	int		            userId;		   // 投顾id
+            2 optional	string		        title;		   // 标题
+            3 optional	string		        content;	   // 内容
+            4 optional	string		        summary;	   // 简介
+            5 optional	int		            type;	       // 观点类型 1：免费；2：付费
+            6 optional	double		        cost;	       // 价格
+            7 optional  string              createTime;    // 创建时间
+            8 optional  string              updateTime;    // 更新时间
+            9 optional	string		        publishTime;   // 发布时间
+            10 optional	int		            status;	       // 状态
+            11 optional	vector<string>		otherTags;     // 标签,存中文不存id，历史数据多个的话中间用逗号隔开
+            12  optional    int             riskLevel;     //风险等级
+        };
+
+        struct ViewDetail
+        {
+            0 optional	ViewBasicInfo       basicInfo;      // 基本详情
+            1 optional  TgDetail            userInfo;       // 投顾信息
+            2 optional	int		            commentCount;   // 观点评论数
+            3 optional	int		            readCount;	    // 观点阅读数
+            4 optional	int		            favorites;	    // 观点点赞数
+            5 optional	int		            saleCount;      // 售出份数
+            6 optional	int		            rewardCount;    // 打赏次数
+        };
+
+		struct ViewCommentBasicInfo
+        {
+            0 optional	int		            id;		       // 评论id
+            1 optional	int 		        parentId;	   // 回复的对象id，例如观点id
+            2 optional	int 		        targetId;	   // 评论的目标id，例如观点id
+            3 optional	int		            userId;	       // 用户id
+            4 optional	string		        content;	   // 评论内容
+            5 optional	int		            isDelete;      // 是否被删除
+            6 optional	string		        createTime;    // 创建时间
+        };
+
+        struct ViewCommentDetail
+        {
+            0 optional  ViewCommentBasicInfo     viewComment;
+            1 optional  TgDetail                 userInfo;
+            2 optional  ViewCommentBasicInfo     replyViewComment;
+        };
+
+        struct ViewCommentGl
+        {
+            0 optional ViewCommentDetail         viewCommentDetail;
+            1 optional ViewDetail                viewDetail;
+        };
+
+        struct ViewComments
+        {
+            0 optional	int		                   total = 0;	   // 评论总数
+            1 optional	vector<ViewCommentDetail>	comments;	   // 观点评论列表
+        };
+
+        struct ViewDetailForYy
+        {
+           0 optional	ViewDetail	        detail;	       // 观点评论列表
+           1 optional   int                 isRecommend;   // 是否推荐
+           2 optional   string              recommendTime; // 推荐时间
+           3 optional   string              recommendImgUrl; //推荐图片的url
+           4 optional   int                 weight;          //推荐权重
+        };
+
+		///////////////////////////////////// 锦囊服务的基本结构体 /////////////////////////////////////
+        struct SmartExpress
+        {
+            0   optional int			 id;//自增id
+            1   optional int			 userId;//用户ID
+            2   optional string			 name;//锦囊名称
+            3   optional string			 feature;//锦囊特色
+            4   optional string			 targetUser;//目标用户
+            5   optional string			 riskTip;//风险提示
+            6   optional int			 type;//1为免费，2为收费
+            7   optional int			 cost;//价格
+            8   optional string			 startTime;//开始时间
+            9   optional string			 endTime;//结束时间
+            10  optional string			 createTime;//创建时间
+            11  optional string			 updateTime;//更新时间
+            12  optional int			 status;//状态
+            13  optional int			 subscribeCount;//订阅数量
+            14  optional int			 updateCount;//更新频次
+            15  optional int			 isBelongGroup;//是否属于圈子
+            16  optional int			 belongGroupId;//属于圈子的Id
+        };
+
+        struct GetListDetail
+        {
+            0   optional SmartExpress    smartExpress;
+            1  optional string			 systemTime;//系统时间
+            2  optional string			 userName;//用户名
+            3  optional int			     adviserType;//1是投资顾问，2为投资达人
+            4  optional string			 avatar;//头像/登记照
+            5  optional int			     runStatus;//运行状态 1是运行0未运行
+
+        };
+
+        struct GetList
+        {
+            0 require	int		                total = 0;	           // 总数
+            1 optional	vector<GetListDetail>	rows;	               // 列表
+        };
+
+        struct QueryTipByTypeDetail
+        {
+            0  optional SmartExpress     smartExpress;
+            1  optional string			 systemTime;//系统时间
+            2  optional string			 userName;//用户名
+            3  optional int			     adviserType;//1是投资顾问，2为投资达人
+            4  optional string			 avatar;//头像/登记照
+            5  optional int			     runStatus;//运行状态 1是运行0未运行
+            6  optional int			     buyStatus=0;//是否购买1购买0没有购买
+            7  optional int			     discountStatus=0;//是否为投顾打折。1是0否
+            8  optional int			     favourablePrice;//折扣价格
+            9  optional double			 favourableRange;//打几折
+        };
+
+        struct QueryTipByType
+        {
+            0 require	int		                        total = 0;	           // 总数
+            1 optional	vector<QueryTipByTypeDetail>	rows;	               // 列表
+        };
+
+        struct QueryRunTipAppDetail
+        {
+            0  optional SmartExpress     smartExpress;
+            1  optional string			 systemTime;//系统时间
+            2  optional string			 userName;//用户名
+            3  optional int			     adviserType;//1是投资顾问，2为投资达人
+            4  optional string			 avatar;//头像/登记照
+            5  optional int			     runStatus;//运行状态 1是运行0未运行
+            6  optional int			     buyStatus=0;//是否购买1购买0没有购买
+            7  optional int			     discountStatus=0;//是否为投顾打折。1是0否
+            8  optional int			     favourablePrice;//折扣价格
+            9  optional double			 favourableRange;//打几折
+            10 optional int			     recommendStatus=0;//是否被推荐为hot，力荐，折现。1是0否
+            11 optional int			     showRecommendStatus=0;//最终是否显示为hot，力荐，折现。1为hot，2为力荐，3为折扣
+        };
+
+        struct QueryRunTipApp
+        {
+            0 require	int		                        total = 0;	           // 总数
+            1 optional	vector<QueryRunTipAppDetail>	rows;	               // 列表
+        };
+
+        struct QueryRunningAppDetail
+        {
+            0  optional SmartExpress     smartExpress;
+            1  optional string			 systemTime;//系统时间
+            2  optional string			 userName;//用户名
+            3  optional int			     adviserType;//1是投资顾问，2为投资达人
+            4  optional string			 avatar;//头像/登记照
+            5  optional int			     buyStatus=0;//是否购买1购买0没有购买
+        };
+
+        struct QueryRunningApp
+        {
+            0 require	int		                        total = 0;	           // 总数
+            1 optional	vector<QueryRunningAppDetail>	rows;	               // 列表
+        };
+
+        struct QueryLatestDetail
+        {
+            0  optional SmartExpress     smartExpress;
+            1  optional string			 systemTime;//系统时间
+            2  optional string			 userName;//用户名
+            3  optional int			     adviserType;//1是投资顾问，2为投资达人
+            4  optional string			 avatar;//头像/登记照
+            5  optional int			     buyStatus=0;//是否购买1购买0没有购买
+        };
+
+        struct QueryLatest
+        {
+            0 require	int		                        total = 0;	           // 总数
+            1 optional	vector<QueryLatestDetail>	rows;	               // 列表
+        };
+
+        struct QueryRunningDetail
+        {
+            0  optional SmartExpress     smartExpress;
+            1  optional string			 systemTime;//系统时间
+            2  optional string			 userName;//用户名
+            3  optional int			     adviserType;//1是投资顾问，2为投资达人
+            4  optional string			 avatar;//头像/登记照
+            5  optional int			     buyStatus=0;//是否购买1购买0没有购买
+            6  optional int			     updateStatus=0;//是否购买1购买0没有购买
+        };
+
+        struct QueryRunning
+        {
+            0 require	int		                        total = 0;	           // 总数
+            1 optional	vector<QueryRunningDetail>	    rows;	               // 列表
+        };
+
+        struct QueryHisOtherDetail
+        {
+            0  optional SmartExpress     smartExpress;
+            1  optional string			 systemTime;//系统时间
+            2  optional string			 userName;//用户名
+            3  optional int			     adviserType;//1是投资顾问，2为投资达人
+            4  optional string			 avatar;//头像/登记照
+            5  optional int			     buyStatus=0;//是否购买1购买0没有购买
+            6  optional int			     updateStatus=0;//是否购买1购买0没有购买
+        };
+
+        struct QueryHisOther
+        {
+            0 require	int		                        total = 0;	           // 总数
+            1 optional	vector<QueryHisOtherDetail>	rows;	               // 列表
+        };
+
+        struct QueryBestDetail
+        {
+            0  optional SmartExpress     smartExpress;
+            1  optional string			 systemTime;//系统时间
+            2  optional string			 userName;//用户名
+            3  optional int			     adviserType;//1是投资顾问，2为投资达人
+            4  optional string			 avatar;//头像/登记照
+            5  optional int			     buyStatus=0;//是否购买1购买0没有购买
+            6  optional int			     updateStatus=0;//是否购买1购买0没有购买
+        };
+
+        struct QueryBest
+        {
+            0 require	int		                        total = 0;	           // 总数
+            1 optional	vector<QueryBestDetail>	rows;	               // 列表
+        };
+
+        struct QueryWebBannerDetail
+        {
+            0  optional SmartExpress     smartExpress;
+            1  optional string			 systemTime;//系统时间
+            2  optional string			 userName;//用户名
+            3  optional int			     adviserType;//1是投资顾问，2为投资达人
+            4  optional string			 avatar;//头像/登记照
+            5  optional string			 extensionWebBannerReason;//推荐理由
+        };
+
+        struct QueryWebBanner
+        {
+            0 require	int		                        total = 0;	           // 总数
+            1 optional	vector<QueryWebBannerDetail>	rows;	               // 列表
+        };
+
+        struct GetTipsDetail
+        {
+            0  optional SmartExpress     smartExpress;
+            1  optional string			 systemTime;//系统时间
+            2  optional string			 userName;//用户名
+            3  optional int			     adviserType;//1是投资顾问，2为投资达人
+            4  optional string			 avatar;//头像/登记照
+            5  optional string			 intro;//简介
+            6  optional int			     runStatus;//运行状态 1是运行0未运行
+            7  optional int			     buyStatus=0;//是否购买1购买0没有购买
+            8  optional int			     updateStatus=0;//是否有更新1是有更新0未更新
+            9  optional int			     discountStatus=0;//是否为投顾打折。1是0否
+            10 optional int			     favourablePrice;//折扣价格
+            11 optional double			 favourableRange;//打几折
+            12 optional int			     liveId;//直播室id
+            13 optional vector<string>   buyer;//锦囊订阅用户id
+        };
+
+        struct Stock
+        {
+            0   optional int			 id;//自增id
+            1   optional int			 userId;//用户ID
+            2   optional int			 contentId;//锦囊文章ID
+            3   optional string			 stockName;//股票名
+            4   optional string			 stockCode;//股票代码
+            5   optional string			 content;//链接
+            6   optional double			 stopLossLimit;//止损点
+            7   optional double			 stopWinLimit;//止盈点
+            8   optional string			 reason;//理由
+            9   optional string			 createTime;//创建时间
+            10  optional string			 updateTime;//更新时间
+            11  optional int			 status;//状态
+        };
+
+        struct TipContent
+        {
+            0   optional int			        id;//自增id
+            1   optional int			        tipId;//锦囊ID
+            2   optional int			        userId;//用户ID
+            3   optional string			        content;//内容
+            4   optional string			        imgs;//图片
+            5   optional string			        thumbnails;//缩略图
+            6   optional string			        createTime;//创建时间
+            7   optional string			        updateTime;//更新时间
+            8   optional string			        publishTime;//更新时间
+            9   optional int			        status;//状态
+            10  optional vector<Stock>          stocks;//个股
+        };
+
+        struct GetTipContents
+        {
+            0 require	int		                        total = 0;	           // 总数
+            1 optional	vector<TipContent>	            rows;	               // 列表
+        };
+
+        struct GetContentDetail
+        {
+            0  optional TipContent       tipContent;
+            1  optional string			 userName;//用户名
+            2  optional int			     adviserType;//1是投资顾问，2为投资达人
+            3  optional string			 avatar;//头像/登记照
+            4  optional int			     buyStatus=0;//是否购买1购买0没有购买
+        };
+
+        struct TipLog
+        {
+            0   optional int			 id;//自增id
+            1   optional int			 userId;//用户ID
+            2   optional int			 contentId;//锦囊文章ID
+            3   optional string			 stockName;//股票名
+            4   optional string			 stockCode;//股票代码
+            5   optional double			 stopLossLimit;//止损点
+            6   optional double			 stopWinLimit;//止盈点
+            7   optional double			 adjustLossLimit;//调整后止损点
+            8   optional double			 adjustWinLimit;//调整后止盈点
+            9   optional int			 flag;//1为调入2为调出3为调整
+            10  optional string			 reason;//理由
+            11  optional string			 createTime;//创建时间
+            12  optional string			 updateTime;//更新时间
+            13  optional int			 status;//状态
+        };
+
+        struct GetTipsLog
+        {
+            0 require	int		                        total = 0;	           // 总数
+            1 optional	vector<TipLog>	                rows;	               // 列表
+        };
+
+
+        ///////////////////////////////////// 组合服务的基本结构体 /////////////////////////////////////
+
+    	//组合基本信息(缓存中和mysql中)
+        struct PortfolioBasicInfo
+        {
+            0   optional    int                id;                 //组合ID
+            1   optional    int                userId;             //投顾ID
+            2   optional    string             portfolioName;      //组合名称
+            3   optional    string             intro;              //组合简介
+            4   optional    double             target;             //目标收益率
+            5   optional    string             startTime;          //组合开始时间
+            6   optional    string             endTime;            //组合结束时间
+            7   optional    int                duration;           //运行周期(单位：天)
+            8   optional    int                capital;            //启动资金
+            9   optional    int                type;               //是否付费1为否2为是
+            10  optional    double             cost;               //订阅价
+            11  optional    string             createTime;         //创建时间
+            12  optional    string             fitInvestor;        //适用人群
+            13  optional    int                saleMode;           //售卖方式(1:仅预售期;2:仅运行中;3:预售期+运行中
+            14  optional    int                saleType;           //售卖数量限制(1:不限;2:限制)
+            15  optional    int                saleLimit;          //限制数量
+            16  optional    int                closePosition;      //平仓线（止损线）
+            17  optional    int                status;             //组合状态
+            18  optional    int                isStopLoss;         //触及止损(1是0否)
+            19  optional    string             stopLossTime;       //触及止损时间
+            20  optional    int                subscribeCount;     //订阅数
+            21  optional    string             updateTime;         //最后更新时间
+            22  optional    int                isRecommend;        //是否被推荐（赚钱组合）
+            23  optional    string             recommendTime;      //推荐时间
+            24  optional    int                rewardCount;        //打赏次数
+            25  optional    int                riskLevel;          //风险等级
+        };
+
+        //组合动态数据（缓存中)
+        struct PortfolioVarInfo
+        {
+            0   optional   int                id;                 //组合ID
+            1   optional   string             totalProfit;        //总收益金额 y
+            2   optional   string             dayNetValue;        //日收益率 y
+            3   optional   string             weekNetValue;       //周收益率y
+            4   optional   string             monthNetValue;      //月收益率y
+            5   optional   string             maxDrawdown;        //最大回撤率y
+            6   optional   int                rank;               //排名 y
+            7   optional   int                rankRise;           //排名上升
+            8  optional    int                win;                //盈（次）
+            9  optional    int                totalWin;           //历史总盈次数
+            10  optional   int                lose;               //亏（次）
+            11  optional   int                totalLose;          //历史总亏（次）
+            12  optional   int                draw;               //平（次）
+            13  optional   int                totalDraw;          //历史总平（次）
+            14  optional   int                unFinished;         //未了结（只）
+            15  optional   int                totalNum;           //当前总的组合数
+            16  optional   string             totalProfitRate;    //总收益率（总收益金额/启动资金） y
+            17  optional   string             newnetvalue;        //净值（）y
+            18  optional   string             exceed;             //跑赢率（(当前总的组合数-排名)/当前总的组合数）
+            19  optional   string             successRate;        //成功率（历史总盈次数/(历史总盈次数+历史总亏+历史总平)）
+
+        };
+
+        ///组合收益数据（交易接口已返回的)
+        struct PortfolioProfitInfo
+        {
+            0   optional   int                id;                 //组合ID
+            1   optional   string             totalProfit;        //总收益金额 y
+            2   optional   string             dayNetValue;        //日收益率 y
+            3   optional   string             weekNetValue;       //周收益率y
+            4   optional   string             monthNetValue;      //月收益率y
+            5   optional   string             maxDrawdown;        //最大回撤率y
+            6  optional    string             totalProfitRate;    //总收益率（总收益金额/启动资金） y
+            7  optional    string             newnetvalue;        //净值（）y
+            8   optional   int                rank;               //排名
+        };
+
+        //组合收益数据（交易接口缺的，年后提供）
+        struct PortfolioProfitOther
+        {
+            0  optional   int                id;                 //组合ID
+            1  optional   int                win;                //盈（次）
+            2  optional   int                totalWin;           //历史总盈次数
+            3  optional   int                lose;               //亏（次）
+            4  optional   int                totalLose;          //历史总亏（次）
+            5  optional   int                draw;               //平（次）
+            6  optional   int                totalDraw;          //历史总平（次）
+            7  optional   int                unFinished;         //未了结（只）
+            8  optional   int                totalNum;           //当前总的组合数
+            9  optional   string             updateTime;         //更新时间
+        };
+
+        //组合数据详情
+        struct PortfolioDetail
+        {
+            0   optional   PortfolioBasicInfo                basic;                 //组合基本信息
+            1   optional   PortfolioVarInfo                  relationInfo;          //相关数据
+            2   optional   TgDetail                          tg;                    //投顾信息
+        };
+
+        //组合分页详情
+        struct PortfolioPageData
+        {
+            0   optional    int                                    total;          //总共多少条
+            1   optional    vector<PortfolioDetail>                list;          //数据列表
+        };
+
+        //收益数据
+        struct PortfolioProfit
+        {
+            0  optional   string             id;   //组合ID
+            1  optional   string             totalProfit;//总利润金额
+            2  optional   string             totalProfitRate;//总收益率
+            3  optional   string             newnetvalue;//当前净值
+            4  optional   string             dayNetValue;//当前日收益率
+            5  optional   string             weekNetValue;//当前周收益率
+            6  optional   string             monthNetValue;//当前月收益率
+            7  optional   string             maxDrawdown;//截止当前最大回撤
+            8  optional   string             rank;//当前排名
+        };
+
+        //资产信息
+        struct PortfolioCapital
+        {
+            0  optional   string             BZ;//币种
+            1  optional   string             ZJYE;//资金余额
+            2  optional   string             KYZJ;//可用资金
+            3  optional   string             KQJE;//可取金额
+            4  optional   string             ZCZZ;//资产总值
+            5  optional   string             ZSZ;//股票总市值
+        };
+
+
+        //持仓信息
+        struct PortfolioStockInfo
+        {
+            0  optional   string             CBJ;	//成本价
+            1  optional   string             KMSL;	//可卖数量
+            2  optional   string             ZQMC;	//证券名称
+            3  optional   string             ZQDM;	//证券代码
+            4  optional   string             DQJG;	//当前价格
+            5  optional   string             ZQSL;	//证券数量
+            6  optional   string             ZXSZ;	//最新市值
+            7  optional   string             FDYK;	//浮动盈亏
+            8  optional   string             GDDM;	//股东代码
+            9  optional   string             MPS;	//定位串
+        };
+
+        //持仓详情
+        struct PortfolioStockDetail
+        {
+            0  optional   PortfolioCapital                  caption;	//资产信息
+            1  optional   vector<PortfolioStockInfo>        stockList;	//持仓列表
+        };
+
+        //调仓信息
+        struct  PortfolioStockChange
+        {
+            0  optional   int                matchCount;//	成交数量
+            1  optional   double             matchPrice;//	成交价格--类型修改
+            2  optional   string             orderDate;//	成交日期
+            3  optional   int                tradeId;//	买卖标志
+            4  optional   string             secuCode;//	证券代码
+            5  optional   string             secuName;//	证券名称
+            6  optional   string             market;//	交易所代码
+            7  optional   string             reason;//	调仓理由
+        };
+
+        //组合类型(实际是Dictionary表中部分字段)
+        struct  PortfolioType
+        {
+            0 require	int		        id;		         // 字典id
+            1 optional  string          dicKey;          // key
+            2 optional  string          keyValue;        // value
+            3 optional  int             extraType;       // 扩展类型
+            4 optional  string          extraValue;      // 扩展值
+        };
+
+        //组合收益曲线数据
+        struct PortfolioProfitChartData
+        {
+            0  optional   string             updateTime;//	更新时间（yyyyMMdd）
+            1  optional   string             totalProfitRate;//	总收益率
+        };
+
+        //敏感词
+        struct SensitiveWord
+        {
+            0 require	int		           id;		       // id
+            1 optional  string             wordKey;        // 敏感词key
+            2 optional  string             wordValue;      // 敏感词value
+            3 optional  int                status;         // 状态：1生效，0失效
+        };
+};

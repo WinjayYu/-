@@ -1,0 +1,51 @@
+.wrapper {
+    .header{
+        height: 230px;
+        background: url(../images/bg_invest.png) no-repeat center;
+        background-size: cover;
+        text-align: center;
+        
+        img {
+            display: block;
+            width: 88px;
+            height: 85px;
+            margin-bottom: 7px;
+            padding-top: 55px;
+            margin: 0 auto;
+        }
+
+        p:nth-of-type(1) {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 18px;
+        }
+
+        p:nth-of-type(2) {
+            font-size: 13px;
+            color: #CED5E5;
+            line-height: 18px;
+            height: 18px;
+        }
+    }
+
+    .content {
+        .abs_content {
+            margin-top: 15px;
+            border-bottom: 1px solid #E4E7EC;
+            padding-bottom: 11px;
+            .sub_abs_content {
+	            padding: 0 25px;
+            }        
+        }
+        .abs_title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 14px;
+        }
+        .abs_details {
+            text-align: justify;
+            line-height: 21px;
+        }
+    }
+}

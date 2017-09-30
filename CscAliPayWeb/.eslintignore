@@ -1,0 +1,7 @@
+coverage
+src/public/*
+src/view/*
+node_modules/
+test/
+dist/
+src/taf/proxy

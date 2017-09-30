@@ -1,0 +1,104 @@
+.wrapper {
+    .header_invest {
+        background-image:  url(../images/wave.png),url(../images/bg_invest.png); 
+        background-size: 100% 68px, cover; 
+        background-repeat: no-repeat, no-repeat;
+        background-position: bottom;
+        height: 193px;
+        color: #fff;
+        position: relative;
+        .introduce {
+            padding: 32px 59px 0 25px;
+            font-size: 14px;
+            color: #fff;
+            line-height: 20px;
+        }
+        .personal_info {
+            .avatar {
+                width: 88px;
+                height: 85px;
+                margin: 2px 0 0 15px;
+            }
+            .tag {
+                display: inline-block;
+                padding: 0;
+                vertical-align: top;
+                margin-top: 10px;
+            }
+        }
+        .right_arrows {
+            position: absolute;
+            width: 25px;
+            height: 85px;
+            bottom: 72px;
+            right: 19px;
+            background-color:  rgba(#fff, 0.1);
+            border-radius: 2px;
+            img {
+                width: 15px;
+                height: 15px;
+                padding: 35px 0 0 5px;
+            }
+        }
+    }
+
+    .item {
+        margin-top: 8px;
+        box-shadow: 0 2px 4px 0 rgba(0,0,0,0.10);;
+        border-radius: 2px;
+        .item_top {
+                border-bottom: 1px solid #E4E7EC;
+            .item_title {
+                padding: 13px 0 0 16px;
+                font-size: 16px;
+                line-height: 23px;
+                color:#000;
+                font-weight: bold;
+            }
+            .item_content {
+                padding: 7px 17px 8px 16px;
+                font-size: 14px;
+                color: #333;
+                line-height: 20px;
+            }
+        }
+        .item_bottom {
+            line-height: 30px;
+            font-size: 12px;
+            .publish_time {
+                &::before {
+                    content: '';
+                    display: inline-block;
+                    width: 15px;
+                    height: 15px;
+                    background: url('../images/clock.png') no-repeat left;
+                    background-size: 15px 15px;
+                    margin:0 4px 0 29px;
+                    vertical-align: -3px;
+                }
+            }
+            .read_number {
+                &::before {
+                    content: '';
+                    display: inline-block;
+                    width: 15px;
+                    height: 15px;
+                    background: url('../images/book.png') no-repeat left;
+                    background-size: 15px 15px;
+                    margin:0 6px 0 68px;
+                    vertical-align: -3px;
+                }
+            }
+        }
+    }
+     .content_invest {
+        padding: 0 8px;
+     }
+}
+
+@media screen and (max-width:320px) {
+    .wrapper .header_invest .personal_info .tag span{
+            padding: 1px 2px;
+            margin-right: 3px;
+    }
+}

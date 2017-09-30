@@ -1,0 +1,3 @@
+{
+  "ETG_Servant": "OEM.TgAccessServer.TgAccessObj@tcp -h 172.16.8.185 -t 60000 -p 10006"
+}

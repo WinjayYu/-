@@ -1,0 +1,9 @@
+/node_modules
+coverage
+.logs
+npm-debug.log
+.vscode
+/src/public
+/src/config/assets_map.json
+dist/
+.idea/
