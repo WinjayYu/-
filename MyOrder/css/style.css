@@ -1,0 +1,272 @@
+/* Reset */
+body,h1,h2,h3,h4,h5,h6,p,ul,ol,dl,dd,figure,menu,input,fieldset,textarea,button,select,th,td,div,span,header,nav,footer{margin:0;padding:0;-webkit-text-size-adjust:none;}
+h1,h2,h3,h4,h5,h6,b,strong{font-size:100%;font-weight:normal;}
+li{list-style:none;}
+em,i{font-style:normal;}
+a,a:visited{text-decoration:none;border:none;color:#333;}
+fieldset,img,input{border:none;}
+input,textarea{resize:none;outline:none;-webkit-appearance:none;}
+body{font-size:12px;
+    font-family:
+        /* 西文 */
+        "-apple-system", "BlinkMacSystemFont",
+        "Segoe UI", "Roboto", "Ubuntu",
+        "Helvetica Neue" , "Helvetica", "Arial",
+        /* 中文 */
+        "PingFang SC", "Hiragino Sans GB",
+        "Microsoft YaHei UI", "Microsoft YaHei", "Source Han Sans CN",
+        "sans-serif";
+    line-height:1;word-wrap:break-word;
+    -webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-touch-callout:none;
+    -webkit-user-select:none;
+    background-color: #F4F4F4;
+}
+.wrapper {
+    min-width: 300px;
+    max-width: 640px;
+    margin: 0 auto;
+}
+.wrapper .level_line{
+    height: 44px;
+    padding: 14px 15px;
+    box-sizing: border-box;
+    background-color: #fff;
+    border-bottom: 1px solid #E3E4E5;
+    position: relative;
+    line-height: 17px;
+    font-size: 17px;
+    color: #000;
+}
+
+.wrapper .level_line::before {
+    content: "";
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background: url('../images/empty.png') no-repeat left; 
+    background-size: 18px;
+    margin-right: 9px;
+    vertical-align: top;
+}
+
+.wrapper .level_line:not(.privilege)::after {
+    content: "";
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background: url('../images/right_arrow.png') no-repeat right;
+    background-size: 14px;
+    margin-right: 9px;
+    vertical-align: top;
+    float: right;
+}
+
+.wrapper .level_line.privilege img{
+   width: 17px;
+   height: 17px;
+   float: right;
+   margin-right: 9px;
+}
+
+.wrapper .level_line:nth-child(1)::before{
+    background: url('../images/privilege.png') no-repeat left;
+    background-size: 18px;
+}
+
+.wrapper .level_line:nth-child(3)::before{
+    background: url('../images/order.png') no-repeat left;
+    background-size: 18px;
+}
+
+.wrapper .level_line:nth-child(4)::before{
+    background: url('../images/contract.png') no-repeat left;
+    background-size: 18px;
+}
+
+.wrapper .level_line:nth-child(5)::before{
+    background: url('../images/risk.png') no-repeat left;
+    background-size: 18px;
+}
+
+.wrapper .order_status {
+    position: absolute;
+    right: 41px;
+    font-size: 15px;
+    color: #323232;
+    line-height: 17px;
+}
+
+.wrapper .order_status .statistics {
+    color: #EF7F21;
+}
+
+.wrapper .quick-entry-link {
+    display: block;
+    text-align: center;
+    float: left;
+    width: 25%;
+}
+
+.wrapper .quick-entry-link .quick-box img {
+    width: 40px;
+    height: 40px;
+    margin: 0 0 8px 0;
+}
+
+.wrapper .quick-entry-link .quick-box p {
+    font-size: 12px;
+    color: #333;
+    line-height: 12px;
+    padding-bottom: 18px;
+}
+
+.wrapper .quick-entry-link .quick-box {
+
+}
+
+.wrapper .quick-entry-nav {
+    overflow: hidden;
+}
+
+.wrapper .appcenter {
+    padding: 19px 0 0 0;
+}
+
+.wrapper .appcenter {
+    background-color: #fff;
+    margin-bottom: 11px;
+}
+
+/* 我的订单 */
+.wrapper .header {
+    height: 44px;
+    background-color: #fff;
+    line-height: 44px;
+}
+
+.wrapper .header .menu {
+    display: inline-block;
+    width: 33.333%;
+    text-align: center;
+    font-size: 16px;
+    color: #333;
+    line-height: 44px;
+}
+
+.wrapper .header .active {
+    color:#EF7F21;
+    position: relative;
+}
+
+.wrapper .header .active::after {
+    content: "";
+    display: block;
+    width: 34px;
+    height: 2px;
+    background-color: #F08429;
+    margin: 0 auto;
+}
+
+.wrapper .order {
+    background-color: #fff;
+    margin-top: 10px;
+    padding: 0 15px;
+    background-color: #fff;
+    overflow: hidden;
+}
+
+.wrapper .order .order_top {
+    height: 35px; 
+    line-height: 35px;
+    color: #808080;
+    font-size: 13px;
+}
+
+.wrapper .order .order_top .order_date {
+    float: right;
+}
+
+.wrapper .order .order_content {
+    height: 80px;
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+    background-color: #fafafa;
+}
+
+.wrapper .order .order_content .cover {
+    display: table-cell;
+    vertical-align: middle;
+    width: 50px;
+}
+
+.wrapper .order .order_content .product_cover {
+    width: 50px;
+    height: 50px;
+    vertical-align: middle;
+}
+
+.wrapper .order .order_content .order_details {
+    display: table-cell;
+    vertical-align: middle;
+    padding-left: 15px;
+}
+
+.wrapper .order .order_content .order_content_title {
+    font-size: 16px;
+    color: #4A4A4A;
+    line-height: 16px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+}
+
+.wrapper .order .order_content .order_content_price {
+    font-size: 13px;
+    color: #4A4A4A;
+    line-height: 15px; 
+    margin-top: 9px;
+}
+ 
+.wrapper .order .order_content .order_content_price .price {
+    font-family: SFUIText-Regular;
+    font-size: 17px;
+    color: #EA4C2D;
+    line-height: 17px;
+}
+.wrapper .order .order_content .order_content_price .deadline {
+    margin-left: 20px;
+}
+
+.wrapper .order .order_bottom {
+    height: 39px;
+    line-height: 39px;
+    float: right;
+}
+
+.wrapper .order .order_bottom .failure_time {
+    font-size: 13px;
+    color: #4A4A4A;
+} 
+
+.wrapper .order .order_bottom .default {
+     font-size: 13px;
+     line-height: 13px; 
+     margin-left: 10px;
+}
+
+.wrapper .order .order_bottom .go_pay {
+    background: #FFFFFF;
+    border: 1px solid #EF7F21;
+    border-radius: 4px;
+    color: #EF7F21;
+    padding: 4px 8px;
+}
+
+.wrapper .order .order_bottom .deal_done {
+    color: #EF7F21;
+}
+
+.wrapper .order .order_bottom .expired {
+    color: #B2B2B2;
+}

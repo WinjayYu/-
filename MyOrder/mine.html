@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no,address=no" />
+    <title>我的</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.upchinapro.com/assert/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="level_line privilege" data-state="0">我的特权<img src="images/privilege_arrow_down.png" alt=""></div>
+        <div class="appcenter">
+            <nav class="quick-entry-nav">
+                    <a href="javascript:void(0)" class="quick-entry-link">
+                        <span class="quick-box">
+                            <img src="images/forecast.png" alt="">
+                            <p class="app_name">股价预测</p>
+                        </span>
+                    </a>
+                    <a href="javascript:void(0)" class="quick-entry-link">
+                        <span class="quick-box">
+                            <img src="images/decision.png" alt="">
+                            <p class="app_name">决策天机</p >
+                        </span>
+                    </a> 
+                    <a href="javascript:void(0)" class="quick-entry-link">
+                        <span class="quick-box">
+                            <img src="images/dragon_tigher.png" alt="">
+                            <p class="app_name">龙虎榜</p>
+                        </span>
+                    </a>
+                    <a href="javascript:void(0)" class="quick-entry-link">
+                        <span class="quick-box">
+                            <img src="images/bull.png" alt="">
+                            <p class="app_name">舆情牛股</p>
+                        </span>
+                    </a> 
+                    <a href="javascript:void(0)" class="quick-entry-link">
+                        <span class="quick-box">
+                            <img src="images/k_line.png" alt="">
+                            <p class="app_name">智能K线</p>
+                        </span>
+                    </a>
+                    <a href="javascript:void(0)" class="quick-entry-link">
+                        <span class="quick-box">
+                            <img src="images/select_stock.png" alt="">
+                            <p class="app_name">智能选股</p>
+                        </span>
+                    </a> 
+                    <a href="javascript:void(0)" class="quick-entry-link">
+                        <span class="quick-box">
+                            <img src="images/diagnose_stock.png" alt="">
+                            <p class="app_name">智能诊股</p>
+                        </span>
+                    </a>
+                     <a href="javascript:void(0)" class="quick-entry-link">
+                        <span class="quick-box">
+                            <img src="images/k_line.png" alt="">
+                            <p class="app_name">智能K线</p>
+                        </span>
+                    </a>
+                    <a href="javascript:void(0)" class="quick-entry-link">
+                        <span class="quick-box">
+                            <img src="images/select_stock.png" alt="">
+                            <p class="app_name">智能选股</p>
+                        </span>
+                    </a> 
+                    <a href="javascript:void(0)" class="quick-entry-link">
+                        <span class="quick-box">
+                            <img src="images/diagnose_stock.png" alt="">
+                            <p class="app_name">智能诊股</p>
+                        </span>
+                    </a>
+            </nav>
+        </div>
+        <div class="level_line">我的订单<span class="order_status"><span class="statistics">1</span><span>个未完成订单</span></span>
+        </div>
+        <div class="level_line">我的合同</div>
+        <div class="level_line">风险评测<span class="order_status">稳健型</span></span></div>
+    </div>
+</body>
+<script>
+    $(document).ready(function() {
+        $('.privilege').click(function() {
+        
+            var $pri = $(this);
+            var state = parseInt($pri.attr('data-state'));
+            var $item = $pri.find('img') || $pri;
+            if(state) {
+                $item.attr('src', 'images/privilege_arrow_down.png');
+                $('.privilege').attr('data-state', '0');
+                $('.appcenter').fadeIn();
+            } else {
+                $item.attr('src', 'images/privilege_arrow_up.png');
+                $('.privilege').attr('data-state', '1');
+                $('.appcenter').fadeOut();
+            }
+        })
+    })
+</script>
+</html>
